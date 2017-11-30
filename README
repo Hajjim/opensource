@@ -1,0 +1,55 @@
+###README PROJET ISIB OPENSOURCE###
+
+Contributeurs :
+	Goossens Cédric - cedricgo@live.fr
+
+########################################################################
+
+How to install GOLANG :
+
+########################
+
+	- Download "golang" package : 
+"wget -c https://storage.googleapis.com/golang/go1.7.3.linux-amd64.tar.gz"
+##Check for last version on golang.org
+
+	- Extract :
+"sudo tar -C /usr/local -xvzf go1.7.3.linux-amd64.tar.gz"
+
+	- Configure your environment :
+"mkdir -p ../DevFolder/go_projects/{bin,src,pkg}" => cd ../DevFolder/go_projects
+
+	- Add to PATH in your /etc/profile:
+"export PATH=$PATH:/usr/local/go/bin"
+
+	- Add environment variables in your bash_profile
+export GOPATH="../DevFolder/go_projects"
+export GOBIN="$GOPATH/bin"
+
+	-Reboot or reload your bash_profile
+
+	- Check your installation :
+"go version"
+"go env"
+
+###################################################################
+
+How to import server :
+
+########################
+
+	- Pull the last version of the project on :
+"https://github.com/abdoulillo/ISIBOpen-source"
+
+	- Copy content of ISIB_SERVER folder into your go_projects/src folder
+
+	- Go into your src folder and run the server :
+"go run isib_server.go"
+
+###################################################################
+
+Additionnal info :
+
+###################
+
+Server ip/port : 172.30.2.201:8000
