@@ -1,1 +1,1 @@
-#Hajjim code GO
+#MODULE pour le fluxrss de Le Monde !
