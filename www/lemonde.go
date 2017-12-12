@@ -4,7 +4,8 @@ import ( //je commence par import les librairies fournient par golang
 	"encoding/xml" //pour l'encodage avec xml
 	"fmt"	       //pour l'utilisation de print
 	"io/ioutil"    //pour lire les fichiers
-         	"net/http"     //pour requete internet
+        "log"	       //pour les log
+	"net/http"     //pour requete internet
 	"os"	       //pour communiquer avec le sys exploit
 )
 
