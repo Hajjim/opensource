@@ -15,21 +15,35 @@ func getContent(url string) ([]byte, error) {
 	//si j'avais mis ''_'' alors ça ne prendrait pas en compte
 	//:= quand on initialise une variable (peu import le type) 
 	//donc ma fonction pour effectuer une requete get à l'url
-	if err != nil {
+	if err != nil { //plus tard supprime l'objet apres que la fonction est finis (return)
 		return nil, fmt.Errorf("Get error: %v", err)//%v remplacer par error
 	}//donc si y a une erreur, je renvoie l'erreur et []byte va etre nil
-	defer resp.Body.Close() //supprime corps de la reponse pour pas etre ouvet après le return
+	defer resp.Body.Close() //supprime corps de la reponse pour pas etre ouvert après le return
 
-	if resp.StatusCode !=  // FAUT VERIFIER LE STATUS CODE
-// ?? docu 3 a lire
+	if resp.StatusCode != //Vérifie status code (si différent de 200 alors renvoie erreur meme si c'est plus au moins ok)
+		return nil, fmt.Errorf("Status error: %v", resp.StatusCode)
+	}
+
+	data, err := ioutil.ReadAll(resp.Body) //lis le contenu de body + err redefinis
+	if err != nil { //erreur au niveau de lecture
+		return nil, fmt.Errorf("Read body: %v", err)
+	}
+
+	return data, nil //renvoie nil car si err different de nil alors erreur
+}
+
 
 type Enclosure struct { // traiter à part car les données trier dans la balise particulière de xml
 	//struct = representation d'un objet auquel on donne methode
-	Url	string
-	Length	string	'xml:"le
-	Type	string
+	Url	string	`xml:"url,attr"` 
+	Length	string	`xml:"length,attr"`
+	Type	string	`xml:"type,attr"`
+//nom type TAG en golang c'est plus simple car represente un truc dans un autre dans un autre type de format
+type Item struct {
 
-type Item struct {}
+// FAIRE XNLNAME ETC
+
+}
 
 type Channel struct {}
 
