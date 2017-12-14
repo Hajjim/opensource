@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/Jeffail/gabs"
@@ -75,6 +77,10 @@ func main() {
 	//lesJournees := make([]Journee, 38)
 	//Anglais := Championnat{Matchdays}
 	var jou Journees
+	tpl, err := template.ParseFiles("tpl.gohtml")
+	if err != nil {
+		log.Fatalln(err)
+	}
 	currentMatchday := getCurrentMatchday()
 	//url := "http://api.football-data.org/v1/competitions/445/fixtures?timeFrameStart=" + "2017-12-10" + "&timeFrameEnd=" + "2017-12-10"
 	url := "http://api.football-data.org/v1/competitions/445/fixtures?timeFrameStart=" + dateBeforeNow + "&timeFrameEnd=" + dateNow
@@ -84,13 +90,17 @@ func main() {
 	fmt.Println(getNbrsDeMatch(jsonParsed))
 	jou.AddMatch(jsonParsed)
 
-	jou.Afficher()
-
+	//jou.Afficher()
+	Output, err := os.Create("MyPage.html")
+	if err != nil {
+		log.Println("Erreur lors de la création du fichier", err)
+	}
+	tpl.Execute(Output, jou.Matches)
 }
 
 func getDate() (string, string) {
 	now := time.Now()
-	beforeNow := now.AddDate(0, 0, -15)
+	beforeNow := now.AddDate(0, 0, -3)
 	mask := "2006-01-02"
 	return now.Format(mask), beforeNow.Format(mask)
 }
