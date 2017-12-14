@@ -5,45 +5,47 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"encoding/json"
 //	"time"
 
 	//"github.com/Jeffail/gabs"
 )
 
-/*type stibData struct {
+type StibData struct {
 	Points []struct {
-		PointID int 'json:"pointID"'
+		PointId int
 		PassingTimes []struct {
-			ExpectedArrivalTime string 'json:"expectedArrivalTime"'
-			LineID int 'json:"lineId"'
-		} 'json:"passingTimes"'
-	} 'json:"points"'
-}*/
-
-type stibData struct {
-	Points []Point
-}
-type Point struct{
-	PointID int
-	PassingTimes []PassingTime
-}
-type PassingTime struct {
-	ExpectedArrivalTime string
-	LineID int
+			ExpectedArrivalTime string
+			LineId int
+		}
+	}
 }
 
 func main() {
 	//l'url de la stib pour la ligne 6437
-	url := "https://opendata-api.stib-mivb.be/OperationMonitoring/1.0/PassingTimeByPoint/6437"
-	//récupération du json sous forme de string
-	json := getDataAPI(url)
-	//affichage du json
-	fmt.Println(json)
+	url := "https://opendata-api.stib-mivb.be/OperationMonitoring/1.0/PassingTimeByPoint/6437%2C6309"
+	//récupération du json sous forme de byte
+	json_resp := getDataAPI(url)
+
+	//pour afficher la totalité sous forme de string :
+	//string_body := string(json_resp)
+	//fmt.Println(string_body)
+
+	//définition de la variable qui va receuillir les données
+	var s StibData
+	//envoi des données dans la structure
+	json.Unmarshal(json_resp, &s)
+	//print de test d'affichage du point ID du premier point
+	fmt.Println(s.Points[0].PointId)
+	/*for _, Points := range s {
+	
+		for _, PassingTimes := range Points {
+		fmt.Println(LineId)
+		}
+	}*/
 }
 
-
-
-func getDataAPI(url string) string {
+func getDataAPI(url string) []byte {
 	//création d'un client
 	client := &http.Client{}
 	//création d'une requête à envoyer au serveur
@@ -65,8 +67,8 @@ func getDataAPI(url string) string {
 		log.Fatal(err)
 	}
 	//passage sous forme de string
-	string_body := string(bytes)
+	//string_body := string(bytes)
 	//désallocation des ressources
 	resp.Body.Close()
-	return string_body
+	return bytes
 }
