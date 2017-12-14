@@ -39,15 +39,53 @@ type Enclosure struct { // traiter à part car les données trier dans la balise
 	Length	string	`xml:"length,attr"`
 	Type	string	`xml:"type,attr"`
 //nom type TAG en golang c'est plus simple car represente un truc dans un autre dans un autre type de format
-type Item struct {
 
-// FAIRE XNLNAME ETC
+//je recupere chaque item de lemonde RSS :
+
+type Item struct {
+	XMLNAME		xml.Name	`xml:"item"`// creer  un objet en fct des tag donné
+	Description	string		`xml:"description"`
+	Link		string		`xml:"link"`
+	PubDate		string		`xml:"pubDate"`
+	Title		string		`xml:"title"`
+	Enclosure	Enclosure	`xml:"enclosure"`//Enclosure on choppe attribut en haut
+	Guid		string		`xml:"guid"`
 
 }
 
-type Channel struct {}
+//balise channel contient item 
+
+type Channel struct {
+	Title		string		`xml:"title"`
+	Link		string		`xml:"link"`
+	Desc		string		`xml:"description"`
+	Items		[]Item		`xml:"item"`
+	PubDate		string		`xml:"pubDate"`
+}
+
+// ma balise RSS
+
+type RSS struct {
+	Channel		Channel		`xml:"channel"`
+}
 
 func main() {
 	xmlStr, err := getContent("http://www.lemonde.fr/rss/une.xml")
-	//if err != nil {
-	//	
+	if err != nil {
+		log.Printf("Failed to get XML: %v", err)
+	}
+	v := RSS {} //objet rss vide (il parse par rapport au type de la variable qu'on lui donne)
+	err = xml.Unmarshal(xmlStr, &v) //unmarshal traduire xml vers l'objet donné
+	if err!= nil { //unmarshal donne un tableau de byte et la variable ou il doit stocker et il parse
+		log.Println(err.Error())//  &v pointe vers v
+		os.Exit(1) // si y a erreur je quitte
+	}
+	for _, item := range v.Channel.Items { // for range prend tableau des item de en haut et
+	//et il le parcourt (l'indice et la valeur) comme ci on avait for key qui va  stocker
+	//l'indice et l'element (range parcourt tout le tableau)
+		log.Println("Title: ", item.Title)
+		log.Println("Description: ", item.Description)
+		log.Println("Link: ", item.Link)
+		log.Println("PubDate: ", item.PubDate)
+		}
+}
