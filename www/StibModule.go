@@ -6,11 +6,19 @@ import (
 	"log"
 	"net/http"
 	"encoding/json"
+	"strconv"
 //	"time"
 
 	//"github.com/Jeffail/gabs"
 )
+//variables avec les id de l'arrêt congrès direction Schaerbeek et Fort-Jaco
+var CongresFor int = 6308
+var CongresScha int = 6357
 
+var HorraireFor [4]string
+var HorraireScha [4]string
+
+//structure du json de la stib qu'on remplit avec le Unmarshal plus bas
 type StibData struct {
 	Points []struct {
 		PointId int
@@ -22,8 +30,8 @@ type StibData struct {
 }
 
 func main() {
-	//l'url de la stib pour la ligne 6437
-	url := "https://opendata-api.stib-mivb.be/OperationMonitoring/1.0/PassingTimeByPoint/6437%2C6309"
+	//l'url de la stib pour la ligne ArretId (conversion int to string avec import strconv)
+	url := "https://opendata-api.stib-mivb.be/OperationMonitoring/1.0/PassingTimeByPoint/" + strconv.Itoa(CongresScha) + "%2C" + strconv.Itoa(CongresFor)
 	//récupération du json sous forme de byte
 	json_resp := getDataAPI(url)
 
@@ -36,15 +44,27 @@ func main() {
 	//envoi des données dans la structure
 	json.Unmarshal(json_resp, &s)
 	//print de test d'affichage du point ID du premier point
-	fmt.Println(s.Points[0].PointId)
-	/*for _, Points := range s {
-	
-		for _, PassingTimes := range Points {
-		fmt.Println(LineId)
+	//fmt.Println(s.Points[0].PointId)
+
+	//foreach Point p in stibData.Points
+	for _, p := range s.Points {
+		//si c'est bien le pointID qui nous intéresse
+		if (p.PointId == CongresScha){
+			//fmt.Println("Congrès direction Scha")
+			for _, time := range p.PassingTimes{
+				fmt.Println("Congrès direction Schaerbeek ligne "+ strconv.Itoa(time.LineId) +" : expected time arrival =" + time.ExpectedArrivalTime)
+			}
 		}
-	}*/
+		if (p.PointId == CongresFor){
+			for _, time := range p.PassingTimes{
+				fmt.Println("Congrès direction Fort-Jaco ligne "+ strconv.Itoa(time.LineId) +" : expected time arrival =" + time.ExpectedArrivalTime)
+			}
+		}
+		
+	}
 }
 
+//func servant à récupérer le json de la stib sous forme de byte
 func getDataAPI(url string) []byte {
 	//création d'un client
 	client := &http.Client{}
@@ -66,9 +86,7 @@ func getDataAPI(url string) []byte {
 	if err != nil {
 		log.Fatal(err)
 	}
-	//passage sous forme de string
-	//string_body := string(bytes)
-	//désallocation des ressources
+	//libération des ressources
 	resp.Body.Close()
 	return bytes
 }
