@@ -14,7 +14,7 @@ func main() {
 	fmt.Println(feed.Items[0].Title)
         fmt.Println(feed.Items[0].Description)
         fmt.Println(feed.Items[0].Link)
-//        fmt.Println(feed.Items[0].Enclosur)
+//         fmt.Println(feed.Items[0].Enclosur)
     //objet rss vide (il parse par rapport au type de la variable qu'on lui donne)
         for _, item := range feed.Items { // for range prend tableau des item de en haut et
         //et il le parcourt (indice et la valeur) comme ci on avait for key qui va  stocker
