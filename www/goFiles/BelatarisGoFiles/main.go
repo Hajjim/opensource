@@ -18,6 +18,7 @@ type Match struct {
 	Resultat1 float64
 	Resultat2 float64
 	Matchday  float64
+	Date      string
 }
 type Journee struct {
 	Matches []Match
@@ -31,10 +32,10 @@ func (j *Journee) AddMatch(jsonData *gabs.Container) {
 		switch s {
 		case "TIMED": //Cas particulier car quand le match n'est pas encore joué les résultats sont à null et donc cela créer des problèmes avec le type float qui ne peut pas contenir la valeur null
 			j.Matches = append(j.Matches, Match{child.Path("status").Data().(string), child.Path("homeTeamName").Data().(string),
-				child.Path("awayTeamName").Data().(string), 0, 0, child.Path("matchday").Data().(float64)})
+				child.Path("awayTeamName").Data().(string), 0, 0, child.Path("matchday").Data().(float64), child.Path("date").Data().(string)}) //Ajout des match dans le tableau
 		default:
 			j.Matches = append(j.Matches, Match{child.Path("status").Data().(string), child.Path("homeTeamName").Data().(string),
-				child.Path("awayTeamName").Data().(string), child.Path("result.goalsHomeTeam").Data().(float64), child.Path("result.goalsAwayTeam").Data().(float64), child.Path("matchday").Data().(float64)})
+				child.Path("awayTeamName").Data().(string), child.Path("result.goalsHomeTeam").Data().(float64), child.Path("result.goalsAwayTeam").Data().(float64), child.Path("matchday").Data().(float64), child.Path("date").Data().(string)})
 		}
 
 	}
@@ -56,7 +57,7 @@ func main() {
 	fmt.Println(currentMatchday)
 	fmt.Println(getNbrsDeMatch(jsonParsed))
 	jou.AddMatch(jsonParsed) //Ajout de mes données JSON dans mon objet journee
-
+	fmt.Println(jou.Matches[0].Date)
 	Output, err := os.Create("MyPage.html")
 	if err != nil {
 		log.Println("Erreur lors de la création du fichier", err)
