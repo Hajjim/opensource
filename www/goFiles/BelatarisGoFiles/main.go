@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"time"
+	"os"
 
 	"github.com/Jeffail/gabs"
 )
@@ -18,17 +19,17 @@ type Match struct {
 	Resultat2 float64
 	Matchday  float64
 }
-type Journees struct {
+type Journee struct {
 	Matches []Match
 }
 
-func (j *Journees) AddMatch(jsonData *gabs.Container) {
+func (j *Journee) AddMatch(jsonData *gabs.Container) {
 
 	children, _ := jsonData.S("fixtures").Children()
 	for _, child := range children {
 		s := child.Path("status").Data().(string)
 		switch s {
-		case "TIMED":
+		case "TIMED": //Cas particulier car quand le match n'est pas encore joué les résultats sont à null et donc cela créer des problèmes avec le type float qui ne peut pas contenir la valeur null
 			j.Matches = append(j.Matches, Match{child.Path("status").Data().(string), child.Path("homeTeamName").Data().(string),
 				child.Path("awayTeamName").Data().(string), 0, 0, child.Path("matchday").Data().(float64)})
 		default:
@@ -38,61 +39,29 @@ func (j *Journees) AddMatch(jsonData *gabs.Container) {
 
 	}
 }
-func (j *Journees) display(matchday float64) {
-	fmt.Printf("%v ème journée\n", matchday)
-	for _, match := range j.Matches {
-
-		/*defer*/ fmt.Printf("[%v]====> %v %v - %v %v   %v\n", match.Status, match.Team1, match.Resultat1, match.Resultat2, match.Team2, match.Matchday)
-	}
-}
-func (j *Journees) Afficher() {
-	var ref Match
-	//var n int = 1
-	var k Journees
-	for i, match := range j.Matches {
-		if i == 0 {
-			ref = match
-			k.Matches = append(k.Matches, ref)
-		}
-		if ref.Matchday != match.Matchday {
-			//n++
-			/*defer*/ k.display(ref.Matchday)
-			ref = match
-			k.Matches = []Match{}
-			k.Matches = append(k.Matches, ref)
-		} else if i != 0 && ref.Matchday == match.Matchday {
-			k.Matches = append(k.Matches, match)
-		}
-
-	}
-	/*defer*/ k.display(ref.Matchday)
-	//println(n)
-}
 
 func main() {
-	dateNow, dateBeforeNow := getDate()
-	//fmt.Println(dateNow + dateBeforeNow)
 	//lesJournees := make([]Journee, 38)
 	//Anglais := Championnat{Matchdays}
-	var jou Journees
+	var jou Journee
+	tpl, err := template.ParseFiles("tpl.gohtml")
+	if err != nil {
+		log.Fatalln(err)
+	}
 	currentMatchday := getCurrentMatchday()
-	//url := "http://api.football-data.org/v1/competitions/445/fixtures?timeFrameStart=" + "2017-12-10" + "&timeFrameEnd=" + "2017-12-10"
-	url := "http://api.football-data.org/v1/competitions/445/fixtures?timeFrameStart=" + dateBeforeNow + "&timeFrameEnd=" + dateNow
-	jsonParsed, _ := gabs.ParseJSON(getDataAPI(url))
+	/*url := "http://api.football-data.org/v1/competitions/445/fixtures?timeFrameStart=" + dateBeforeNow + "&timeFrameEnd=" + dateNow*/
+	url := "http://api.football-data.org/v1/competitions/445/fixtures?matchday=" + currentMatchday
+	jsonParsed, _ := gabs.ParseJSON(getDataAPI(url)) //Récupération des données JSON
 
 	fmt.Println(currentMatchday)
 	fmt.Println(getNbrsDeMatch(jsonParsed))
-	jou.AddMatch(jsonParsed)
+	jou.AddMatch(jsonParsed) //Ajout de mes données JSON dans mon objet journee
 
-	jou.Afficher()
-
-}
-
-func getDate() (string, string) {
-	now := time.Now()
-	beforeNow := now.AddDate(0, 0, -15)
-	mask := "2006-01-02"
-	return now.Format(mask), beforeNow.Format(mask)
+	Output, err := os.Create("MyPage.html")
+	if err != nil {
+		log.Println("Erreur lors de la création du fichier", err)
+	}
+	tpl.Execute(Output, jou.Matches)
 }
 
 func getDataAPI(url string) []byte {
@@ -119,9 +88,9 @@ func getNbrsDeMatch(jsonData *gabs.Container) float64 {
 	return jsonData.Path("count").Data().(float64) //mettre float car si je met int, il n'accepte pas
 
 }
-func getCurrentMatchday() float64 {
+func getCurrentMatchday() string {
 	url := "http://api.football-data.org/v1/competitions/445/leagueTable"
 	jsonParsed2, _ := gabs.ParseJSON(getDataAPI(url))
 
-	return jsonParsed2.Path("matchday").Data().(float64)
+	return fmt.Sprint(jsonParsed2.Path("matchday").Data().(float64))
 }
