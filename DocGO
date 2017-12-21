@@ -10,3 +10,9 @@ Site officiel + docu [EN] : https://golang.org/
 Cours [FR] : https://gist.github.com/leg0ffant/3bee4829ce2ad8fd026c
 Cours [EN] : https://www.goinggo.net/
 Cours [FR] : https://go-tour-fr.appspot.com/list
+
+SERVEUR HTML :
+
+- https://astaxie.gitbooks.io/build-web-application-with-golang/en/04.0.html
+- https://www.sohamkamani.com/blog/2017/09/13/how-to-build-a-web-application-in-golang/#starting-an-http-server 
+- https://tutorialedge.net/golang/creating-simple-web-server-with-golang/
