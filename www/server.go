@@ -5,10 +5,20 @@ package main
 import (
 	cedPack "cedricPackage"
 	"net/http"
+	"time"
 )
 
 func main() {
+	//lancement du module stib dans un thread à part
+	go stibModule()
+	//lancement du serveur web
 	http.Handle("/", http.FileServer(http.Dir("./HTTP")))
 	http.ListenAndServe(":8000", nil)
-	cedPack.StartModule()
+}
+
+func stibModule() {
+	//renouvelle les valeurs des variables toutes les 20 secondes
+	for range time.Tick(time.Second * 21) {
+		cedPack.GetVariablesFromServer()
+	}
 }
