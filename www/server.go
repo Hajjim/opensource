@@ -12,5 +12,5 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir("./HTTP")))
 	http.ListenAndServe(":8000", nil)
 	cedPack.StartModule()
-	hajjiPack.fluxrss()
+	hajjiPack.StartModule()
 }
