@@ -1,12 +1,16 @@
-package hajjiPackage
+package rssPackage
 
 import ( 
 	"fmt"
 	"github.com/mmcdole/gofeed"
+	"html/template"
+	"os"
+	"log"
+//	."hajjiPackage"
 )
 
-func fluxrss() {
-
+func StartModule() {
+//	htmlgo, err := template.ParseFiles("fluxgo.html")
 	fp := gofeed.NewParser()
 	feed, _ := fp.ParseURL("https://www.lemonde.fr/rss/une.xml" )
 	fmt.Println(feed.Title)
@@ -25,7 +29,9 @@ func fluxrss() {
                 fmt.Println("PubDate: ", item.Published)
 		for _, enclosure := range item.Enclosures {
 		fmt.Println("Enclosure", enclosure.URL)
+//		Output, err := os.Create("Mypage.html")
 		}
                 }
+//	htmlgo.Execute(Output, feed.Items)
 
 }
