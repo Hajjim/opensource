@@ -3,10 +3,12 @@ package StibModule
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 	//	"time"
@@ -17,11 +19,24 @@ import (
 var CongresFor int = 6308
 var CongresScha int = 6357
 
+//slices qui récupèrent les minutes avant l'arrivée des trams
 var HorraireFor92 []string
 var HorraireFor93 []string
 
 var HorraireScha92 []string
 var HorraireScha93 []string
+
+//structure qui accueille les données de las tib à envoyer dans le html
+type StibToWeb struct {
+	For9201  string
+	For9202  string
+	For9301  string
+	For9302  string
+	Scha9201 string
+	Scha9202 string
+	Scha9301 string
+	Scha9302 string
+}
 
 //structure du json de la stib qu'on remplit avec le Unmarshal plus bas
 type StibData struct {
@@ -34,7 +49,14 @@ type StibData struct {
 	}
 }
 
+//fonction lancée pour recevoir les valeurs du serveur et les intégrer dans le html
 func GetVariablesFromServer() {
+
+	//crée un template sur base du fichier html template.html
+	tpl, err := template.ParseFiles("/home/ced/Documents/Developpement/git/ProjetOpenSource/ISIBOpen-source/www/HTTP/templates/template.html")
+	if err != nil {
+		log.Fatalln(err)
+	}
 	//l'url de la stib pour la ligne ArretId (conversion int to string avec import strconv)
 	url := "https://opendata-api.stib-mivb.be/OperationMonitoring/1.0/PassingTimeByPoint/" + strconv.Itoa(CongresScha) + "%2C" + strconv.Itoa(CongresFor)
 	//récupération du json sous forme de byte
@@ -63,8 +85,10 @@ func GetVariablesFromServer() {
 		if p.PointId == CongresScha {
 			//fmt.Println("Congrès direction Scha")
 			for _, time := range p.PassingTimes {
+				//récupération des minutes avant d'arriver
 				minutsBeforeArrival := dateToMinuts(time.ExpectedArrivalTime)
 				fmt.Println("Congrès direction Schaerbeek ligne " + strconv.Itoa(time.LineId) + " arrive dans " + strconv.Itoa(minutsBeforeArrival) + " minutes")
+				//envoi de ces minutes dans le slice correspondant à la ligne
 				if time.LineId == 92 {
 					HorraireFor92 = append(HorraireFor92, strconv.Itoa(minutsBeforeArrival))
 				}
@@ -91,6 +115,24 @@ func GetVariablesFromServer() {
 	//fmt.Println(HorraireFor93[0], " et ensuite ", HorraireFor93[1])
 	//fmt.Println(HorraireScha92[0], " et ensuite ", HorraireScha92[1])
 	//fmt.Println(HorraireScha93[0], " et ensuite ", HorraireScha93[1])
+
+	//remplis la structure à envoyer dans le html
+	sTW := StibToWeb{
+		For9201:  HorraireFor92[0],
+		For9202:  HorraireFor92[1],
+		For9301:  HorraireFor93[0],
+		For9302:  HorraireFor93[1],
+		Scha9201: HorraireScha92[0],
+		Scha9202: HorraireScha92[1],
+		Scha9301: HorraireScha93[0],
+		Scha9302: HorraireScha93[1],
+	}
+	//recrée un fichier html appelé index.html incorporant les valeurs de sTW
+	Output, err := os.Create("HTTP/index.html")
+	if err != nil {
+		log.Println("Erreur lors de la création du fichier", err)
+	}
+	tpl.Execute(Output, &sTW)
 }
 
 //func servant à récupérer le json de la stib sous forme de byte
@@ -99,14 +141,14 @@ func getDataAPI(url string) []byte {
 	//Tansporteur
 	netTransport := &http.Transport{
 		Dial: (&net.Dialer{
-			Timeout: 5 * time.Second,
+			Timeout: 25 * time.Second,
 		}).Dial,
 		TLSHandshakeTimeout: 5 * time.Second,
 	}
 
 	//création d'un client
 	client := &http.Client{
-		Timeout:   time.Second * 10,
+		Timeout:   time.Second * 25,
 		Transport: netTransport,
 	}
 	//création d'une requête à envoyer au serveur
