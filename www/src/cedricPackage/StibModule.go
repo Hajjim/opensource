@@ -3,12 +3,10 @@ package StibModule
 import (
 	"encoding/json"
 	"fmt"
-	"html/template"
+	"io"
 	"io/ioutil"
 	"log"
-	"net"
 	"net/http"
-	"os"
 	"strconv"
 	"time"
 	//	"time"
@@ -26,18 +24,6 @@ var HorraireFor93 []string
 var HorraireScha92 []string
 var HorraireScha93 []string
 
-//structure qui accueille les données de las tib à envoyer dans le html
-type StibToWeb struct {
-	For9201  string
-	For9202  string
-	For9301  string
-	For9302  string
-	Scha9201 string
-	Scha9202 string
-	Scha9301 string
-	Scha9302 string
-}
-
 //structure du json de la stib qu'on remplit avec le Unmarshal plus bas
 type StibData struct {
 	Points []struct {
@@ -52,11 +38,6 @@ type StibData struct {
 //fonction lancée pour recevoir les valeurs du serveur et les intégrer dans le html
 func GetVariablesFromServer() {
 
-	//crée un template sur base du fichier html template.html
-	tpl, err := template.ParseFiles("/home/ced/Documents/Developpement/git/ProjetOpenSource/ISIBOpen-source/www/HTTP/templates/template.html")
-	if err != nil {
-		log.Fatalln(err)
-	}
 	//l'url de la stib pour la ligne ArretId (conversion int to string avec import strconv)
 	url := "https://opendata-api.stib-mivb.be/OperationMonitoring/1.0/PassingTimeByPoint/" + strconv.Itoa(CongresScha) + "%2C" + strconv.Itoa(CongresFor)
 	//récupération du json sous forme de byte
@@ -90,10 +71,10 @@ func GetVariablesFromServer() {
 				fmt.Println("Congrès direction Schaerbeek ligne " + strconv.Itoa(time.LineId) + " arrive dans " + strconv.Itoa(minutsBeforeArrival) + " minutes")
 				//envoi de ces minutes dans le slice correspondant à la ligne
 				if time.LineId == 92 {
-					HorraireFor92 = append(HorraireFor92, strconv.Itoa(minutsBeforeArrival))
+					HorraireScha92 = append(HorraireScha92, strconv.Itoa(minutsBeforeArrival))
 				}
 				if time.LineId == 93 {
-					HorraireFor93 = append(HorraireFor93, strconv.Itoa(minutsBeforeArrival))
+					HorraireScha93 = append(HorraireScha93, strconv.Itoa(minutsBeforeArrival))
 				}
 			}
 		}
@@ -102,10 +83,10 @@ func GetVariablesFromServer() {
 				minutsBeforeArrival := dateToMinuts(time.ExpectedArrivalTime)
 				fmt.Println("Congrès direction Fort-Jaco ligne " + strconv.Itoa(time.LineId) + " arrive dans " + strconv.Itoa(minutsBeforeArrival) + " minutes")
 				if time.LineId == 92 {
-					HorraireScha92 = append(HorraireScha92, strconv.Itoa(minutsBeforeArrival))
+					HorraireFor92 = append(HorraireFor92, strconv.Itoa(minutsBeforeArrival))
 				}
 				if time.LineId == 93 {
-					HorraireScha93 = append(HorraireScha93, strconv.Itoa(minutsBeforeArrival))
+					HorraireFor93 = append(HorraireFor93, strconv.Itoa(minutsBeforeArrival))
 				}
 			}
 		}
@@ -115,24 +96,6 @@ func GetVariablesFromServer() {
 	//fmt.Println(HorraireFor93[0], " et ensuite ", HorraireFor93[1])
 	//fmt.Println(HorraireScha92[0], " et ensuite ", HorraireScha92[1])
 	//fmt.Println(HorraireScha93[0], " et ensuite ", HorraireScha93[1])
-
-	//remplis la structure à envoyer dans le html
-	sTW := StibToWeb{
-		For9201:  HorraireFor92[0],
-		For9202:  HorraireFor92[1],
-		For9301:  HorraireFor93[0],
-		For9302:  HorraireFor93[1],
-		Scha9201: HorraireScha92[0],
-		Scha9202: HorraireScha92[1],
-		Scha9301: HorraireScha93[0],
-		Scha9302: HorraireScha93[1],
-	}
-	//recrée un fichier html appelé index.html incorporant les valeurs de sTW
-	Output, err := os.Create("HTTP/index.html")
-	if err != nil {
-		log.Println("Erreur lors de la création du fichier", err)
-	}
-	tpl.Execute(Output, &sTW)
 }
 
 //func servant à récupérer le json de la stib sous forme de byte
@@ -140,37 +103,42 @@ func getDataAPI(url string) []byte {
 
 	//Tansporteur
 	netTransport := &http.Transport{
-		Dial: (&net.Dialer{
-			Timeout: 25 * time.Second,
-		}).Dial,
-		TLSHandshakeTimeout: 5 * time.Second,
+		TLSHandshakeTimeout: 10 * time.Second,
 	}
 
 	//création d'un client
 	client := &http.Client{
-		Timeout:   time.Second * 25,
+		//erreur récurente avec les Timeouts des clients sur cette version de Go
+		//si on le met à 0 il est annulé et tant qu'il n'y a pas de problème, l'erreur
+		//est évitée... à améliorer
+		Timeout:   time.Second * 0,
 		Transport: netTransport,
 	}
 	//création d'une requête à envoyer au serveur
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("fatal à la création de la requete ", err)
 	}
 	//ajout des headers dans la requête pour authentifier la connexion à l'open data de la stib
-	req.Header.Add("Accept", "application/json")
+	req.Header.Set("Accept", "application/json")
+	//req.Header.Add("Accept", "application/json")
 	req.Header.Add("Authorization", "Bearer 01dc5ca7d2c53c40771fcce562bb0377")
 	//création d'une réponse su base de la réception de la requête
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(" fatal à la réception ", err)
+
 	}
-	//sauvegarde de son contenu sous forme de byte
 	bytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("fatal dans le io ", err)
 	}
+	//vérification que toutes les données sont bien récupérées avant de libérer les ressources
+	io.Copy(ioutil.Discard, resp.Body)
 	//libération des ressources
 	resp.Body.Close()
+	//sauvegarde de son contenu sous forme de byte
+
 	return bytes
 }
 
