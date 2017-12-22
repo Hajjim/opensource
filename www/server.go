@@ -4,7 +4,8 @@ package main
 //il faut donc faire une copie des packages dans /Www/src et les mettre dans le src du gopath
 import (
 	cedPack "cedricPackage"
-	hajjiPack "hajjiPackage"
+	//!!! installer le package go de git 'go get -v github.com/mmcdole/gofeed pour ce package
+
 	"net/http"
 	"time"
 )
@@ -12,7 +13,7 @@ import (
 func main() {
 	//lancement du module stib dans un thread à part
 	go stibModule()
-	hajjiPack.StartModule()
+	//hajjiPack.StartModule()
 	//lancement du serveur web
 	http.Handle("/", http.FileServer(http.Dir("./HTTP")))
 	http.ListenAndServe(":8000", nil)
@@ -23,4 +24,4 @@ func stibModule() {
 	for range time.Tick(time.Second * 21) {
 		cedPack.GetVariablesFromServer()
 	}
-}w
+}
