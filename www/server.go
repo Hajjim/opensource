@@ -20,6 +20,7 @@ func main() {
 }
 
 func stibModule() {
+	cedPack.GetVariablesFromServer()
 	//renouvelle les valeurs des variables toutes les 20 secondes
 	for range time.Tick(time.Second * 21) {
 		cedPack.GetVariablesFromServer()
