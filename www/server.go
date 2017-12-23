@@ -5,8 +5,10 @@ import (
 	//!!! IL FAUT DONNER LE CHEMIN D'ACCES AU PACKAGE POUR EVITER DE LE RECOPIER 
 	//POUR CHAQUE MISE A JOUR 
 	//Nous avons choisis un mauvais emplacement et donc on doit chaque fois modifier
-	//nos chemins d'accès car j'ai Hajjim avant ISIBOpen-source par exemple
-	cedPack "github.com/Hajjim/ISIBOpen-source/www/src/cedricPackage"
+	//nos chemins d'accès, donc il faut garder celui-ci github.com/isib pour tous
+	//cela evitera de modifier chaque fois nos chemins d'accès ou encore de copier
+	//le package dans le GOPATH
+	cedPack "github.com/isib/ISIBOpen-source/www/src/cedricPackage"
 	"html/template"
 	"log"
 	"os"
