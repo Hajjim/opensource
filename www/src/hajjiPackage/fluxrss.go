@@ -1,15 +1,14 @@
-package rssPackage
+package main
 
 import ( 
 	"fmt"
 	"github.com/mmcdole/gofeed"
-	"html/template"
-	"os"
-	"log"
-//	."hajjiPackage"
+//	"html/template"
+//	"os"
+//	"log"
 )
 
-func StartModule() {
+func main() {
 //	htmlgo, err := template.ParseFiles("fluxgo.html")
 	fp := gofeed.NewParser()
 	feed, _ := fp.ParseURL("https://www.lemonde.fr/rss/une.xml" )
