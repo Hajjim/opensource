@@ -1,19 +1,22 @@
 package main
 
-//!!! nos packages sont des packages internes !
 import (
-	//!!! IL FAUT DONNER LE CHEMIN D'ACCES AU PACKAGE POUR EVITER DE LE RECOPIER 
-	//POUR CHAQUE MISE A JOUR 
-	//Nous avons choisis un mauvais emplacement et donc on doit chaque fois modifier
-	//nos chemins d'accès, donc il faut garder celui-ci github.com/isib pour tous
-	//cela evitera de modifier chaque fois nos chemins d'accès ou encore de copier
-	//le package dans le GOPATH
+	/*IL FAUT DONNER LE CHEMIN D'ACCES AU PACKAGE POUR EVITER DE LE RECOPIER POUR
+	CHAQUE MISE A JOUR !
+	->Nous avons choisis un mauvais emplacement et donc on doit chaque fois modifier
+	nos chemins d'accès, donc il faut garder celui-ci github.com/isib pour tous
+	cela evitera de modifier chaque fois nos chemins d'accès ou encore de copier
+	le package dans le GOPATH*/
+
+	//nos packages internes :
 	cedPack "github.com/isib/ISIBOpen-source/www/src/cedricPackage"
+	hajjiPack "github.com/isib/ISIBOpen-source/www/src/hajjiPackage"
+	//DONT FORGET : Installer mon package gofeed avec "go get -v github.com/mmcdole/gofeed"
+	"github.com/mmcdole/gofeed"
+
 	"html/template"
 	"log"
 	"os"
-	//!!! installer le package gofeed de git 'go get -v github.com/mmcdole/gofeed pour ce package
-
 	"net/http"
 	"time"
 )
@@ -21,11 +24,13 @@ import (
 //variables globales des structures des données à envoyer dans le html
 var dTI DataToInsert
 var cD CedData
+var hD HajjiData
 
 func main() {
-	//lancement du module stib dans un thread à part
+	//lancement du module stib/module rss dans un thread à part
 	//!! quand notre module termine sa maj, il faut relancer la func createHTML()
 	go stibModule()
+	go rssModule()
 
 	//boucle infinie pour que quand une erreur liée à une requête qui dépasse le timeout
 	//survient, relance le programme
@@ -49,7 +54,7 @@ func startListening() {
 type DataToInsert struct {
 	CedData
 	BelData
-	HajData
+	HajjiData
 }
 
 //structure liée à la Stib
@@ -64,11 +69,15 @@ type CedData struct {
 	Scha9302 string
 }
 
-//vos données ici
+//structure pour mes données items de mon fluxrss
+type HajjiData struct {
+	Items []*gofeed.Item
+}
+
+//@Belataris tes données ici
 type BelData struct {
 }
-type HajData struct {
-}
+
 
 //lance le module de la stib
 func stibModule() {
@@ -99,6 +108,19 @@ func loadStibData() {
 	//quand les données sont récupérées, création du html
 	createHTML()
 }
+
+
+//lance le module fluxrss
+func rssModule() {
+	hD.Items = hajjiPack.GetFeedRss() //mon loadRssData en quelque sorte
+	for range time.Tick(time.Second * 60) {
+	hD.Items = hajjiPack.GetFeedRss()
+	}
+//!!Mes données a renoter ?!
+//donnée reçus et création du html
+//createHTML()
+}
+
 
 //crée un fichier index.html sur base du template et des variables à envoyer
 func createHTML() {

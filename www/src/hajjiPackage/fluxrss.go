@@ -1,13 +1,16 @@
-package main
+package RssModule //au lieu de main
 
 import ( 
-	"fmt"
+//	"fmt"
 	"github.com/mmcdole/gofeed"
-//	"html/template"
-//	"os"
-//	"log"
 )
 
+func GetFeedRss() []*gofeed.Item {
+	fp := gofeed.NewParser()
+	feed, _ := fp.ParseURL("https://www.lemonde.fr/rss/une.xml")
+	return feed.Items //je renvoie mes items pour server.go
+}
+/*
 func main() {
 //	htmlgo, err := template.ParseFiles("fluxgo.html")
 	fp := gofeed.NewParser()
@@ -34,3 +37,4 @@ func main() {
 //	htmlgo.Execute(Output, feed.Items)
 
 }
+*/

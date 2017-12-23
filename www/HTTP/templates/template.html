@@ -76,6 +76,14 @@
       <p><a href="#">Link</a></p>
     </div>
     <div class="col-sm-8 text-left"> 
+
+
+<!--SI POSSIBLE : il faudra qu'on gère la transition entre mon module FLUXRSS et votre module
+sans que ça refresh la page entierement mais juste le module 
+car si on met un compteur et que chaque fois il refresh tout, 
+alors mon module RSS ne s'affichera jamais -->
+
+<!--Le module de Cédric pour la stib-->
       <h1>Module de la Stib</h1>
       <p>
         <h2><b>Arrêt Congrès :</b></h2>
@@ -94,7 +102,32 @@
           </li>
         </ul>
       </p>
-      <hr>
+      <br><!-- @Ced j'ai modifié ton hr en br pour espacer mon module rss du tiens, 
+		je sais pas si c'est ça que tu voulais faire -->
+
+<!-- Le module de Hajji pour le flux rss -->
+      <h1>Module de FeedRss</h1>
+      <p>
+	 <h2><b> Les derniers titres de l'actualité :</b></h2>
+	    <table>
+		<tr>
+		  <th>Titre</th>
+		  <th>Description</th>
+		  <th>Image</th>
+		</tr>
+		{{range $i, $item := .HajjiData.Items}}
+		<tr>
+		  <td>{{ $item.Title }}</td>
+		  <td>{{ $item.Description }}</td>
+		  <td><img src="{{(index $item.Enclosures 0).URL}}" style="width:50%;height:20%"></td>
+		</tr>
+		{{end}}
+	    </table>
+	</p>
+	<br>
+
+
+<!-- Petit exemple -->
       <h3>Test</h3>
       <p>Lorem ipsum...</p>
     </div>
@@ -108,6 +141,8 @@
     </div>
   </div>
 </div>
+
+
 
 <footer class="container-fluid text-center">
   <p>Footer Text</p>
