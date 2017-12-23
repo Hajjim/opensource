@@ -1,8 +1,11 @@
 package main
 
-//!!! pour importer nos packages persos, ils doivent se trouver dans le gopath ou le goroot.
-//il faut donc faire une copie des packages dans /Www/src et les mettre dans le src du gopath
+//!!! nos packages sont des packages internes !
 import (
+	//!!! IL FAUT DONNER LE CHEMIN D'ACCES AU PACKAGE POUR EVITER DE LE RECOPIER 
+	//POUR CHAQUE MISE A JOUR 
+	//Nous avons choisis un mauvais emplacement et donc on doit chaque fois modifier
+	//nos chemins d'accès car j'ai Hajjim avant ISIBOpen-source par exemple
 	cedPack "github.com/Hajjim/ISIBOpen-source/www/src/cedricPackage"
 	"html/template"
 	"log"
