@@ -1,23 +1,24 @@
 package main
 
+	//!!! nos packages sont des packages internes !
 import (
-	/*IL FAUT DONNER LE CHEMIN D'ACCES AU PACKAGE POUR EVITER DE LE RECOPIER POUR
-	CHAQUE MISE A JOUR !
-	->Nous avons choisis un mauvais emplacement et donc on doit chaque fois modifier
+	/*IL FAUT DONNER LE CHEMIN D'ACCES AU PACKAGE POUR EVITER DE LE RECOPIER POUR 
+	CHAQUE MISE A JOUR. 
+	-> Nous avons choisis un mauvais emplacement et donc on doit chaque fois modifier
 	nos chemins d'accès, donc il faut garder celui-ci github.com/isib pour tous
 	cela evitera de modifier chaque fois nos chemins d'accès ou encore de copier
-	le package dans le GOPATH*/
+	le package dans le GOPATH*/ 
 
-	//nos packages internes :
+	//les packages internes :
 	cedPack "github.com/isib/ISIBOpen-source/www/src/cedricPackage"
 	hajjiPack "github.com/isib/ISIBOpen-source/www/src/hajjiPackage"
-	//DONT FORGET : Installer mon package gofeed avec "go get -v github.com/mmcdole/gofeed"
+	//DONT FORGET : Installer mon package gofeed "go get -v github.com/mmcdole/gofeed"
 	"github.com/mmcdole/gofeed"
 
 	"html/template"
 	"log"
-	"net/http"
 	"os"
+	"net/http"
 	"time"
 )
 
@@ -27,7 +28,7 @@ var cD CedData
 var hD HajjiData
 
 func main() {
-	//lancement du module stib/module rss dans un thread à part
+	//lancement du module stib/rssModule dans un thread à part
 	//!! quand notre module termine sa maj, il faut relancer la func createHTML()
 	go stibModule()
 	go rssModule()
@@ -38,10 +39,10 @@ func main() {
 }
 
 func startListening() {
-	//hajjiPack.StartModule()
 	//lancement du serveur web
 	http.Handle("/", http.FileServer(http.Dir("./HTTP")))
 	http.ListenAndServe(":8000", nil)
+
 	/*server := &http.Server{}
 	listener, err := net.ListenTCP("tcp4", &net.TCPAddr{IP: net.IPv4(192, 168, 11, 2), Port: 8000})
 	if err != nil {
@@ -53,8 +54,8 @@ func startListening() {
 //structure envoyée dans le HTML
 type DataToInsert struct {
 	CedData
-	BelData
 	HajjiData
+	BelData
 }
 
 //structure liée à la Stib
@@ -69,8 +70,8 @@ type CedData struct {
 	Scha9302 string
 }
 
-//structure pour mes données items de mon fluxrss
-type HajjiData struct {
+//les données de mon fluxrss
+type  HajjiData struct {
 	Items []*gofeed.Item
 }
 
@@ -108,16 +109,19 @@ func loadStibData() {
 	createHTML()
 }
 
+
 //lance le module fluxrss
 func rssModule() {
-	hD.Items = hajjiPack.GetFeedRss() //mon loadRssData en quelque sorte
-	for range time.Tick(time.Second * 60) {
-		hD.Items = hajjiPack.GetFeedRss()
-	}
-	//!!Mes données a renoter ?!
-	//donnée reçus et création du html
-	//createHTML()
+	hD.Items = hajjiPack.GetFeed()
+
+		}
+//donnée reçus et création du html
+createHTML()
 }
+
+
+
+
 
 //crée un fichier index.html sur base du template et des variables à envoyer
 func createHTML() {
@@ -129,8 +133,7 @@ func createHTML() {
 
 	//remplissage des valeurs récupérées par les modules
 	dTI = DataToInsert{
-		CedData:   cD,
-		HajjiData: hD,
+		CedData: cD,
 	}
 
 	//chargement du html de sortie
