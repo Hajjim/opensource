@@ -1,4 +1,4 @@
-package belataris
+package football
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Jeffail/gabs"
+	"BelatarisPackage/github.com/Jeffail/gabs"
 )
 
 type Match struct {
@@ -37,6 +37,18 @@ func (j *Journee) AddMatch(jsonData *gabs.Container) {
 		}
 
 	}
+}
+
+var Jou Journee
+var CurrentMatchday string
+
+func GetFootballData() {
+
+	CurrentMatchday = GetCurrentMatchday()
+	/*url := "http://api.football-data.org/v1/competitions/445/fixtures?timeFrameStart=" + dateBeforeNow + "&timeFrameEnd=" + dateNow*/
+	url := "http://api.football-data.org/v1/competitions/445/fixtures?matchday=" + CurrentMatchday
+	jsonParsed, _ := gabs.ParseJSON(GetDataAPI(url)) //Récupération des données JSON
+	Jou.AddMatch(jsonParsed)                         //Ajout de mes données JSON dans mon objet journee
 }
 func GetDataAPI(url string) []byte {
 	client := &http.Client{}
