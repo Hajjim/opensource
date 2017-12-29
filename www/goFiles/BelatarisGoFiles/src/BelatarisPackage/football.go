@@ -17,6 +17,8 @@ type Match struct {
 	Resultat2 float64
 	Matchday  float64
 	Date      string
+	Image1    string //Url vers le logo du club 1
+	Image2    string //Url vers le logo du club 2
 }
 type Journee struct {
 	Matches []Match
@@ -27,13 +29,21 @@ func (j *Journee) AddMatch(jsonData *gabs.Container) {
 	children, _ := jsonData.S("fixtures").Children()
 	for _, child := range children {
 		s := child.Path("status").Data().(string)
+		href1 := child.Path("_links.homeTeam.href").Data().(string) //Récupération du lien url vers les infos de l'équipe1
+		href2 := child.Path("_links.awayTeam.href").Data().(string) //Récupération du lien url vers les infos de l'équipe2
+		jsonParsedTeamInfo1, _ := gabs.ParseJSON(GetDataAPI(href1))
+		jsonParsedTeamInfo2, _ := gabs.ParseJSON(GetDataAPI(href2))
+		imgUrl1 := jsonParsedTeamInfo1.Path("crestUrl").Data().(string)
+		imgUrl2 := jsonParsedTeamInfo2.Path("crestUrl").Data().(string)
+
 		switch s {
 		case "TIMED": //Cas particulier car quand le match n'est pas encore joué les résultats sont à null et donc cela créer des problèmes avec le type float qui ne peut pas contenir la valeur null
 			j.Matches = append(j.Matches, Match{child.Path("status").Data().(string), child.Path("homeTeamName").Data().(string),
-				child.Path("awayTeamName").Data().(string), 0, 0, child.Path("matchday").Data().(float64), child.Path("date").Data().(string)}) //Ajout des match dans le tableau
+				child.Path("awayTeamName").Data().(string), 0, 0, child.Path("matchday").Data().(float64), child.Path("date").Data().(string), imgUrl1, imgUrl2}) //Ajout des match dans le tableau
 		default:
 			j.Matches = append(j.Matches, Match{child.Path("status").Data().(string), child.Path("homeTeamName").Data().(string),
-				child.Path("awayTeamName").Data().(string), child.Path("result.goalsHomeTeam").Data().(float64), child.Path("result.goalsAwayTeam").Data().(float64), child.Path("matchday").Data().(float64), child.Path("date").Data().(string)})
+				child.Path("awayTeamName").Data().(string), child.Path("result.goalsHomeTeam").Data().(float64), child.Path("result.goalsAwayTeam").Data().(float64), child.Path("matchday").Data().(float64),
+				child.Path("date").Data().(string), imgUrl1, imgUrl2})
 		}
 
 	}

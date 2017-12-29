@@ -5,11 +5,35 @@
   <title>Document</title>
 </head>
 <body>
-<ul>
-  {{range .MatchesJournee.Matches}}
-<li>{{.Team1}} {{.Resultat1}} - {{.Resultat2}} {{.Team2}} {{.Date}}  [{{.Status}}] </li>
-{{end}}
-</ul>
+
+<div id="change"> </div>
+<script type="text/javascript">
+
+var content = [
+  "<ul>\
+  {{range .MatchesJournee.Matches}}\
+<li>{{.Team1}} {{.Resultat1}} - {{.Resultat2}} {{.Team2}} {{.Date}}  [{{.Status}}] </li>\
+{{end}}\
+</ul>",
+  "content2",
+  "content3"
+];
+var msgPtr = 0;
+
+function change() {
+  var newMsg = content[msgPtr];
+  document.getElementById('change').innerHTML = newMsg;
+  msgPtr++;  msgPtr = (msgPtr % content.length);
+}
+
+function startFunction() { setInterval(change, 5000); }
+
+onload = function() {
+startFunction();
+}
+
+</script>
+
 </body>
 </html>
   

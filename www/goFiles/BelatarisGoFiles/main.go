@@ -30,6 +30,8 @@ func main() {
 	//fmt.Println(GetNbrsDeMatch(jsonParsed))
 
 	fmt.Println(Bel.MatchesJournee.Matches[0].Date)
+	fmt.Println(Bel.MatchesJournee.Matches[0].Image1)
+	fmt.Println(Bel.MatchesJournee.Matches[0].Image2)
 	Output, err := os.Create("MyPage.html")
 	if err != nil {
 		log.Println("Erreur lors de la création du fichier", err)
