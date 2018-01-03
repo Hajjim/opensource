@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <title>Bootstrap Example</title>
-  <meta http-equiv="refresh" content="20" />
+  <meta http-equiv="refresh" content="50" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -40,6 +40,24 @@
       }
       .row.content {height:auto;} 
     }
+    table.scoreTable,table.scoreTable th,table.scoreTable td {
+    border: 0;
+    border-collapse: collapse;
+    margin: 0 40px;
+    
+}
+ table.scoreTable th, table.scoreTable td {
+    /*padding: 5px;
+    text-align: center;
+    width: 40px;
+    word-wrap:break-word;*//*Séparer le nom du club pour qu'il ne dépasse pas la taille de la case*/
+    padding: 5px;
+    text-align: center;
+   max-width: 120px;
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+    overflow: hidden;
+}
   </style>
 </head>
 <body>
@@ -68,85 +86,76 @@
   </div>
 </nav>
   
-<div class="container-fluid text-center">    
-  <div class="row content">
-    <div class="col-sm-2 sidenav">
-      <p><a href="#">Link</a></p>
-      <p><a href="#">Link</a></p>
-      <p><a href="#">Link</a></p>
-    </div>
-    <div class="col-sm-8 text-left"> 
+
+    
+    <div id="change" class="col-sm-8 text-left"> </div>
+    
+  
+    <script type="text/javascript">
+
+//Ajouter votre contenu dans les emplacements prévus
+var content = [
+  //Module Foot
+  "<h2> {{.JourneeActuelle}} ème journée</h2>\
+  {{range .BelData.MatchesJournee.Matches}}\
+  <table class='scoreTable' style='float: left ; border: 1px solid blue;'>\
+  <caption>{{.Date}}</caption>\
+    <tr>\
+      <th><img src='{{.Image1}}'  width= 50 height = 50></th>\
+      <th><h2>{{.Resultat1}}</h2></th>\
+      <th><h2>-</h2></th>\
+        <th><h2>{{.Resultat2}}</h2></th>\
+        <th><img src='{{.Image2}}'  width= 50 height = 50></th>\
+    </tr>\
+    <tr>\
+      <td>{{.Team1}}</td>\
+      <td colspan =3>{{.Status}}</td>\
+      <td>{{.Team2}}</td>\
+    </tr>\
+  </table>\
+  {{end}}",
+  "<h1>Module de la Stib</h1>\
+<p>\
+  <h2><b>Arrêt Congrès :</b></h2>\
+  <ul>\
+    <li>\
+      92 Gare de Schaerbeek : {{.CedData.Scha9201}} min puis {{.CedData.Scha9202}} min\
+    </li>\
+    <li>\
+      93 Gare de Schaerbeek : {{.CedData.Scha9301}} min puis {{.CedData.Scha9302}} min\
+    </li>\
+    <li>\
+      92 Fort-Jaco : {{.CedData.For9201}} min puis {{.CedData.For9202}} min\
+    </li>\
+    <li>\
+      93 Fort-Jaco : {{.CedData.For9301}} min puis {{.CedData.For9302}} min\
+    </li>\
+  </ul>\
+</p>\
+<br>",
+"content3", //@Hajji je n'ai pas repris ton html car il y'a un truc qui cloche dedans car il fait planter le script
+  "content4",
+  "content5"
+];
+var msgPtr = 0;
+
+function change() {
+  var newMsg = content[msgPtr];
+  document.getElementById('change').innerHTML = newMsg;
+  msgPtr++;  msgPtr = (msgPtr % content.length);
+}
+
+function startFunction() { change(); setInterval(change, 10000); }
+
+onload = function() {
+startFunction();
+}
+
+</script>
 
 
-<!--SI POSSIBLE : il faudra qu'on gère la transition entre mon module FLUXRSS et votre module
-sans que ça refresh la page entierement mais juste le module 
-car si on met un compteur et que chaque fois il refresh tout, 
-alors mon module RSS ne s'affichera jamais -->
-
-<!--Le module de Cédric pour la stib-->
-      <h1>Module de la Stib</h1>
-      <p>
-        <h2><b>Arrêt Congrès :</b></h2>
-        <ul>
-          <li>
-            92 Gare de Schaerbeek : {{.CedData.Scha9201}} min puis {{.CedData.Scha9202}} min
-          </li>
-          <li>
-            93 Gare de Schaerbeek : {{.CedData.Scha9301}} min puis {{.CedData.Scha9302}} min
-          </li>
-          <li>
-            92 Fort-Jaco : {{.CedData.For9201}} min puis {{.CedData.For9202}} min
-          </li>
-          <li>
-            93 Fort-Jaco : {{.CedData.For9301}} min puis {{.CedData.For9302}} min
-          </li>
-        </ul>
-      </p>
-      <br><!-- @Ced j'ai modifié ton hr en br pour espacer mon module rss du tiens, 
-		je sais pas si c'est ça que tu voulais faire -->
-
-<!-- Le module de Hajji pour le flux rss -->
-      <h1>Module de FeedRss</h1>
-      <p>
-	 <h2><b> Les derniers titres de l'actualité :</b></h2>
-	    <table>
-		<tr>
-		  <th>Titre</th>
-		  <th>Description</th>
-		  <th>Image</th>
-		</tr>
-		{{range $i, $item := .HajjiData.Items}}
-		<tr>
-		  <td>{{ $item.Title }}</td>
-		  <td>{{ $item.Description }}</td>
-		  <td><img src="{{(index $item.Enclosures 0).URL}}" style="width:50%;height:20%"></td>
-		</tr>
-		{{end}}
-	    </table>
-	</p>
-	<br>
-
-
-<!-- Petit exemple -->
-      <h3>Test</h3>
-      <p>Lorem ipsum...</p>
-    </div>
-    <div class="col-sm-2 sidenav">
-      <div class="well">
-        <p>ADS</p>
-      </div>
-      <div class="well">
-        <p>ADS</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<footer class="container-fluid text-center">
-  <p>Footer Text</p>
-</footer>
+  
+      
 
 </body>
 </html>
