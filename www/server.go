@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	/*IL FAUT DONNER LE CHEMIN D'ACCES AU PACKAGE POUR EVITER DE LE RECOPIER POUR
 	CHAQUE MISE A JOUR !
 	->Nous avons choisis un mauvais emplacement et donc on doit chaque fois modifier
@@ -9,8 +11,10 @@ import (
 	le package dans le GOPATH*/
 
 	//nos packages internes :
-	cedPack "github.com/isib/ISIBOpen-source/www/src/cedricPackage"
-	hajjiPack "github.com/isib/ISIBOpen-source/www/src/hajjiPackage"
+	BelPack "BelatarisPackage"
+	cedPack "cedricPackage"
+	hajjiPack "hajjiPackage"
+	"time"
 	//DONT FORGET : Installer mon package gofeed avec "go get -v github.com/mmcdole/gofeed"
 	"github.com/mmcdole/gofeed"
 
@@ -18,17 +22,20 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 )
 
 //variables globales des structures des données à envoyer dans le html
 var dTI DataToInsert
 var cD CedData
+var Bel BelData
 var hD HajjiData
+var eri EricData
+var abdou AbdouData
 
 func main() {
-	//lancement du module stib/module rss dans un thread à part
+	//lancement de nos modules dans un thread à part
 	//!! quand notre module termine sa maj, il faut relancer la func createHTML()
+	go footModule()
 	go stibModule()
 	go rssModule()
 
@@ -42,12 +49,7 @@ func startListening() {
 	//lancement du serveur web
 	http.Handle("/", http.FileServer(http.Dir("./HTTP")))
 	http.ListenAndServe(":8000", nil)
-	/*server := &http.Server{}
-	listener, err := net.ListenTCP("tcp4", &net.TCPAddr{IP: net.IPv4(192, 168, 11, 2), Port: 8000})
-	if err != nil {
-		log.Fatal("error creating listener")
-	}
-	server.Serve(listener)*/
+
 }
 
 //structure envoyée dans le HTML
@@ -55,6 +57,8 @@ type DataToInsert struct {
 	CedData
 	BelData
 	HajjiData
+	EricData
+	AbdouData
 }
 
 //structure liée à la Stib
@@ -74,8 +78,18 @@ type HajjiData struct {
 	Items []*gofeed.Item
 }
 
-//@Belataris tes données ici
+//Structure relative à mes données sur le foot
 type BelData struct {
+	MatchesJournee  BelPack.Journee //Ensemble des matches de la journée
+	JourneeActuelle string
+}
+
+//@Eric tes données ici
+type EricData struct {
+}
+
+//@Abdoulilo tes données ici
+type AbdouData struct {
 }
 
 //lance le module de la stib
@@ -108,6 +122,28 @@ func loadStibData() {
 	createHTML()
 }
 
+//Lance le module qui va récupérer les données des matches
+func footModule() {
+	//récupération de mes données une première fois
+	BelPack.GetFootballData()
+	//Affectation des données récupérer dans la structure qui va être envoyé dans le html
+	Bel = BelData{
+		MatchesJournee:  BelPack.Jou,
+		JourneeActuelle: BelPack.CurrentMatchday}
+	createHTML()
+	//Rafraichissement des données toutes les 5 minutes (des requêtes trop fréquentes font planter l'API)
+	for range time.Tick(time.Minute * 5) {
+		BelPack.GetFootballData()
+
+		Bel = BelData{
+			MatchesJournee:  BelPack.Jou,
+			JourneeActuelle: BelPack.CurrentMatchday}
+		createHTML()
+		fmt.Println("updated")
+	}
+
+}
+
 //lance le module fluxrss
 func rssModule() {
 	hD.Items = hajjiPack.GetFeedRss() //mon loadRssData en quelque sorte
@@ -130,6 +166,7 @@ func createHTML() {
 	//remplissage des valeurs récupérées par les modules
 	dTI = DataToInsert{
 		CedData:   cD,
+		BelData:   Bel,
 		HajjiData: hD,
 	}
 
