@@ -91,26 +91,18 @@
 
 //Ajouter votre contenu dans les emplacements prévus
 var content = [
-"<h1>Module de FeedRss</h1>\
-<p>\
-  <h2><b>Les derniers titres de l'actualité :</b></h2>\
+"<h2><b>Les derniers titres de l'actualité :</b></h2>\
   <table>\
-    <tr>\
-      <th>Titre</th>\
-      <th>Description</th>\
-      <th>Image</th>\
-    </tr>\
      {{range $i, $item := .HajjiData.Items}} \
    <tr>\
-    <td>\  {{ $item.Title }} \ </td>\
-    <td>\  {{ $item.Description }} \ </td>\
-    <td>\
-    <img src='{{(index $item.Enclosures 0).URL}}' style='width:100%;height:200%'>\
+    <td> <hr> \
+    <img src='{{(index $item.Enclosures 0).URL}}' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
+    <td>\ <hr> <b> {{ $item.Title }} </b> <br>\
+   {{ $item.Description }} \ </td>\
    </tr>\
    {{end}} \
    </table>\
-</p>\
 <br>",
   "<h2> {{.JourneeActuelle}} ème journée</h2>\
   {{range .BelData.MatchesJournee.Matches}}\
