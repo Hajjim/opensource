@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-
-	"BelatarisPackage/github.com/Jeffail/gabs"
+	//A changer ton chemin -> met le direct dans github.com comme cedric et moi please 
+	"github.com/Jeffail/gabs"
 )
 
 type Match struct {

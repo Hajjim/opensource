@@ -11,10 +11,13 @@ import (
 	le package dans le GOPATH*/
 
 	//nos packages internes :
-	BelPack "BelatarisPackage"
-	cedPack "cedricPackage"
-	hajjiPack "hajjiPackage"
 	"time"
+
+	cedPack "github.com/isib/ISIBOpen-source/www/src/cedricPackage"
+	hajjiPack "github.com/isib/ISIBOpen-source/www/src/hajjiPackage"
+	//@Bela: Tu dois laisser ce chemin comme moi et cedric, car ça cause des soucis de chemin d'acces
+	// -> VOIR premier commentaire, ta juste à recloner et changer de place ton package
+	BelPack "github.com/isib/ISIBOpen-source/www/src/BelatarisPackage"
 	//DONT FORGET : Installer mon package gofeed avec "go get -v github.com/mmcdole/gofeed"
 	"github.com/mmcdole/gofeed"
 
@@ -27,8 +30,8 @@ import (
 //variables globales des structures des données à envoyer dans le html
 var dTI DataToInsert
 var cD CedData
-var Bel BelData
 var hD HajjiData
+var Bel BelData
 var eri EricData
 var abdou AbdouData
 
@@ -55,8 +58,8 @@ func startListening() {
 //structure envoyée dans le HTML
 type DataToInsert struct {
 	CedData
-	BelData
 	HajjiData
+	BelData
 	EricData
 	AbdouData
 }
@@ -122,6 +125,17 @@ func loadStibData() {
 	createHTML()
 }
 
+//lance le module fluxrss
+func rssModule() {
+	hD.Items = hajjiPack.GetFeedRss() //mon loadRssData en quelque sorte
+	for range time.Tick(time.Second * 60) {
+		hD.Items = hajjiPack.GetFeedRss()
+	}
+	//!!Mes données a renoter ?!
+	//donnée reçus et création du html
+	//createHTML()
+}
+
 //Lance le module qui va récupérer les données des matches
 func footModule() {
 	//récupération de mes données une première fois
@@ -144,17 +158,6 @@ func footModule() {
 
 }
 
-//lance le module fluxrss
-func rssModule() {
-	hD.Items = hajjiPack.GetFeedRss() //mon loadRssData en quelque sorte
-	for range time.Tick(time.Second * 60) {
-		hD.Items = hajjiPack.GetFeedRss()
-	}
-	//!!Mes données a renoter ?!
-	//donnée reçus et création du html
-	//createHTML()
-}
-
 //crée un fichier index.html sur base du template et des variables à envoyer
 func createHTML() {
 	//chargement du template
@@ -166,8 +169,8 @@ func createHTML() {
 	//remplissage des valeurs récupérées par les modules
 	dTI = DataToInsert{
 		CedData:   cD,
-		BelData:   Bel,
 		HajjiData: hD,
+		BelData:   Bel,
 	}
 
 	//chargement du html de sortie
