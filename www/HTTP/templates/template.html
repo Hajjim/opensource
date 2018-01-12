@@ -95,7 +95,23 @@
 
 //Ajouter votre contenu dans les emplacements prévus
 var content = [
-  //Module Foot
+"<h1>Module de FeedRss</h1>\
+<p>\
+  <h2><b>Les derniers titres de l'actualité :</b></h2>\
+  <table>\
+    <tr>\
+      <th>Titre</th>\
+      <th>Description</th>\
+    </tr>\
+     {{range $i, $item := .HajjiData.Items}} \
+   <tr>\
+    <td>\  {{ $item.Title }} \ </td>\
+    <td>\  {{ $item.Description }} \ </td>\
+   </tr>\
+   {{end}} \
+   </table>\
+</p>\
+<br>",
   "<h2> {{.JourneeActuelle}} ème journée</h2>\
   {{range .BelData.MatchesJournee.Matches}}\
   <table class='scoreTable' style='float: left ; border: 1px solid blue;'>\
@@ -133,7 +149,6 @@ var content = [
   </ul>\
 </p>\
 <br>",
-"content3", 
   "content4",
   "content5"
 ];
