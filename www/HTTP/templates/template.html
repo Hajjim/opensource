@@ -74,10 +74,9 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Projects</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href=javascript:onClickMenu(0)>News</a></li>
+        <li><a href=javascript:onClickMenu(1)>Foot</a></li>
+        <li><a href=javascript:onClickMenu(2)>Stib</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
@@ -148,9 +147,7 @@ var content = [
     </li>\
   </ul>\
 </p>\
-<br>",
-  "content4",
-  "content5"
+<br>"
 ];
 var msgPtr = 0;
 
@@ -160,7 +157,12 @@ function change() {
   msgPtr++;  msgPtr = (msgPtr % content.length);
 }
 
-function startFunction() { change(); setInterval(change, 10000); }
+function onClickMenu(index){
+  msgPtr = index;
+  change();
+}
+
+function startFunction() { change(); setInterval(change, 20000); }
 
 onload = function() {
 startFunction();
