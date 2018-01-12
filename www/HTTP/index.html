@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
-  <meta http-equiv="refresh" content="50" />
+  <title>ISIB OpenSource Site</title>
+  <meta http-equiv="refresh" content="60" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -67,17 +67,13 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
       </button>
-      <a class="navbar-brand" href="#">Logo</a>
+      <a class="navbar-brand" href="#">ISIB</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Projects</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        <li><a href=javascript:onClickMenu(0)>News</a></li>
+        <li><a href=javascript:onClickMenu(1)>Foot</a></li>
+        <li><a href=javascript:onClickMenu(2)>Stib</a></li>
       </ul>
     </div>
   </div>
@@ -99,7 +95,6 @@ var content = [
     <tr>\
       <th>Titre</th>\
       <th>Description</th>\
-      <th>Image</th>\
     </tr>\
       \
    <tr>\
@@ -119,7 +114,7 @@ var content = [
     \
    <tr>\
     <td>\  « Il n’y aura pas de nouvel impôt », Bruno Le Maire rectifie les propos de Jacqueline Gourault \ </td>\
-    <td>\  La ministre auprès du ministre de l’intérieur avait fait part jeudi de son souhait que la taxe d’habitation qui va être supprimée soit remplacée par un « nouvel impôt ». \ </td>\
+    <td>\  La ministre auprès du ministre de l’intérieur avait fait part jeudi de son souhait que la taxe d’habitation qui va être supprimée soit remplacée par un nouvel impôt. \ </td>\
    </tr>\
     \
    <tr>\
@@ -377,22 +372,20 @@ var content = [
   <h2><b>Arrêt Congrès :</b></h2>\
   <ul>\
     <li>\
-      92 Gare de Schaerbeek : 3 min puis 13 min\
+      92 Gare de Schaerbeek : 0 min puis 9 min\
     </li>\
     <li>\
-      93 Gare de Schaerbeek : 1 min puis 8 min\
+      93 Gare de Schaerbeek : 4 min puis 13 min\
     </li>\
     <li>\
-      92 Fort-Jaco : 6 min puis 14 min\
+      92 Fort-Jaco : 11 min puis 18 min\
     </li>\
     <li>\
-      93 Fort-Jaco : 2 min puis 12 min\
+      93 Fort-Jaco : 5 min puis 10 min\
     </li>\
   </ul>\
 </p>\
-<br>",
-  "content4",
-  "content5"
+<br>"
 ];
 var msgPtr = 0;
 
@@ -402,7 +395,12 @@ function change() {
   msgPtr++;  msgPtr = (msgPtr % content.length);
 }
 
-function startFunction() { change(); setInterval(change, 10000); }
+function onClickMenu(index){
+  msgPtr = index;
+  change();
+}
+
+function startFunction() { change(); setInterval(change, 20000); }
 
 onload = function() {
 startFunction();
