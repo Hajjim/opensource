@@ -1,12 +1,11 @@
-package football
+package Football
 
 import (
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	//A changer ton chemin -> met le direct dans github.com comme cedric et moi please 
-	"github.com/Jeffail/gabs"
+	"github.com/isib/ISIBOpen-source/www/src/BelatarisPackage/Jeffail/gabs"
 )
 
 type Match struct {

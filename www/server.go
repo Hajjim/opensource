@@ -15,8 +15,8 @@ import (
 
 	cedPack "github.com/isib/ISIBOpen-source/www/src/cedricPackage"
 	hajjiPack "github.com/isib/ISIBOpen-source/www/src/hajjiPackage"
-	//@Bela: Tu dois laisser ce chemin comme moi et cedric, car ça cause des soucis de chemin d'acces
-	// -> VOIR premier commentaire, ta juste à recloner et changer de place ton package
+	
+	
 	BelPack "github.com/isib/ISIBOpen-source/www/src/BelatarisPackage"
 	//DONT FORGET : Installer mon package gofeed avec "go get -v github.com/mmcdole/gofeed"
 	"github.com/mmcdole/gofeed"
