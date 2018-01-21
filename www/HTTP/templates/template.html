@@ -40,24 +40,22 @@
       }
       .row.content {height:auto;} 
     }
-    table.scoreTable,table.scoreTable th,table.scoreTable td {
-    border: 0;
-    border-collapse: collapse;
-    margin: 0 40px;
-    
-}
- table.scoreTable th, table.scoreTable td {
-    /*padding: 5px;
+    table.scoreTable2 th, table.scoreTable2 td {
+    padding: 1px;
     text-align: center;
-    width: 40px;
-    word-wrap:break-word;*//*Séparer le nom du club pour qu'il ne dépasse pas la taille de la case*/
-    padding: 5px;
-    text-align: center;
-   max-width: 120px;
-    text-overflow: ellipsis; 
-    white-space: nowrap; 
-    overflow: hidden;
+    width: 500px;
 }
+table.scoreTable2 th {
+    background-color: black;
+    color: white;
+}
+table.scoreTable2 tr:nth-child(odd) {
+    background-color: #eee;
+}
+table.scoreTable2 tr:nth-child(even) {
+   background-color:#fff;
+}
+   
   </style>
 </head>
 <body>
@@ -104,24 +102,40 @@ var content = [
    {{end}} \
    </table>\
 <br>",
-  "<h2> {{.JourneeActuelle}} ème journée</h2>\
+"<div>\
+  <h3>Résultats Barclay Premier League</h3>\
+  </div>\
+  <table class='scoreTable2' cellpadding='0' cellspacing='0'>\
+  <thead>\
+  <th  colspan='8'><h4>{{.JourneeActuelle}} ème journée</h4></th>\
+  <th  colspan='4'></th>\
+  <th><h4>Statut</h4></th>\
+  </thead>\
   {{range .BelData.MatchesJournee.Matches}}\
-  <table class='scoreTable' style='float: left ; border: 1px solid blue;'>\
-  <caption>{{.Date}}</caption>\
-    <tr>\
-      <th><img src='{{.Image1}}'  width= 50 height = 50></th>\
-      <th><h2>{{.Resultat1}}</h2></th>\
-      <th><h2>-</h2></th>\
-        <th><h2>{{.Resultat2}}</h2></th>\
-        <th><img src='{{.Image2}}'  width= 50 height = 50></th>\
-    </tr>\
-    <tr>\
-      <td>{{.Team1}}</td>\
-      <td colspan =3>{{.Status}}</td>\
-      <td>{{.Team2}}</td>\
-    </tr>\
-  </table>\
-  {{end}}",
+  <tr>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+    <div style='color: blue;'>{{.Date}}</div>\
+    <div ><br></div>\
+    <div>\
+    <br></div>\
+                    </td>\
+    <td ><h4>{{.Team1}}</h4></td>\
+    <td ><img height='30' src='{{.Image1}}' width='30' /></td>\
+    <td ><h3>{{.Resultat1}}</h3></td>\
+    <td ><h3>-</h3></td>\
+    <td ><h3>{{.Resultat2}}</h3></td>\
+    <td ><img height='30' src='{{.Image2}}' width='30' /></td>\
+    <td ><h4>{{.Team2}}</h4></td>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+      {{.Status}}\
+    </td>\
+     </tr>\
+     {{end}}\
+    </table>",
   "<h1>Module de la Stib</h1>\
 <p>\
   <h2><b>Arrêt Congrès :</b></h2>\
