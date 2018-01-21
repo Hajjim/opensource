@@ -46,7 +46,7 @@ type Journee struct {
 }
 
 func (j *Journee) AddMatch(jsonData *gabs.Container) {
-
+	j.Matches = nil //Vide le tableau pour se débarraser des anciennes données des matches et pour ne garder que les données les plus récentes
 	children, _ := jsonData.S("fixtures").Children()
 	for _, child := range children {
 		s := child.Path("status").Data().(string)
