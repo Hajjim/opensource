@@ -1,3 +1,11 @@
+/*Copyright <2018> <Belataris Dhoulkifli, Hajji Mohamed, Goossens Cédric>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
 package main
 
 import (
@@ -15,8 +23,6 @@ import (
 
 	cedPack "github.com/isib/ISIBOpen-source/www/src/cedricPackage"
 	hajjiPack "github.com/isib/ISIBOpen-source/www/src/hajjiPackage"
-	
-	
 	BelPack "github.com/isib/ISIBOpen-source/www/src/BelatarisPackage"
 	//DONT FORGET : Installer mon package gofeed avec "go get -v github.com/mmcdole/gofeed"
 	"github.com/mmcdole/gofeed"
@@ -25,6 +31,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"golang.org/x/net/websocket"
 )
 
 //variables globales des structures des données à envoyer dans le html
@@ -36,6 +44,7 @@ var eri EricData
 var abdou AbdouData
 
 func main() {
+	
 	//lancement de nos modules dans un thread à part
 	//!! quand notre module termine sa maj, il faut relancer la func createHTML()
 	go footModule()
@@ -48,9 +57,9 @@ func main() {
 }
 
 func startListening() {
-	//hajjiPack.StartModule()
 	//lancement du serveur web
 	http.Handle("/", http.FileServer(http.Dir("./HTTP")))
+	http.Handle("/socket", websocket.Handler(socket))
 	http.ListenAndServe(":8000", nil)
 
 }
@@ -131,9 +140,6 @@ func rssModule() {
 	for range time.Tick(time.Second * 60) {
 		hD.Items = hajjiPack.GetFeedRss()
 	}
-	//!!Mes données a renoter ?!
-	//donnée reçus et création du html
-	//createHTML()
 }
 
 //Lance le module qui va récupérer les données des matches
@@ -181,3 +187,32 @@ func createHTML() {
 	//création du HTML de sortie en insériant la structure contenant les variables
 	tpl.Execute(Output, &dTI)
 }
+
+  type message struct {
+	// the json tag means this will serialize as a lowercased field
+	Message string `json:"message"`
+  }
+  //fonction parcourue lorsqu'un client envoi un message au serveur
+  func socket(ws *websocket.Conn) {
+	for {
+	  // allocate our container struct
+	  var m message
+  
+	  // si il recoit un message
+	  if err := websocket.JSON.Receive(ws, &m); err != nil {
+		log.Println(err)
+		break
+	  }
+  
+	  log.Println("Received message:", m.Message)
+  
+	  // alors envoi une réponse à celui qui a envoyé le message
+	  //envoi la structure contenant les données de la stib
+	  m2 := cD;
+	  if err := websocket.JSON.Send(ws, m2); err != nil {
+		log.Println(err)
+		break
+	  }
+	}
+  }
+  

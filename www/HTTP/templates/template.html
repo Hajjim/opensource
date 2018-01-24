@@ -1,13 +1,52 @@
+<!--Copyright <2018> <Belataris Dhoulkifli, Hajji Mohamed, Goossens Cédric>
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <title>ISIB OpenSource Site</title>
-  <meta http-equiv="refresh" content="60" />
+  <!--<meta http-equiv="refresh" content="60" /> -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script>
+  var ws = new WebSocket("ws://" + window.location.host + "/socket");
+  //onopen, envoi un message au serveur
+  ws.onopen = function() {
+    ws.send(JSON.stringify({message: "hello server!"}))
+  }
+  //si recoit un message du serveur, modifie les données sur base de la struct récupérée
+  ws.onmessage = function(event) {
+    var m = JSON.parse(event.data);
+    document.getElementById('s9201').innerHTML = m.Scha9201;
+    document.getElementById('s9202').innerHTML = m.Scha9202;
+    document.getElementById('s9301').innerHTML = m.Scha9301;
+    document.getElementById('s9302').innerHTML = m.Scha9302;
+    document.getElementById('f9201').innerHTML = m.For9201;
+    document.getElementById('f9202').innerHTML = m.For9202;
+    document.getElementById('f9301').innerHTML = m.For9301;
+    document.getElementById('f9302').innerHTML = m.For9302;
+
+    //console.debug("Received message", m.message);
+  }
+  //log l'erreur si il y a
+  ws.onerror = function(event) {
+    console.debug(event)
+  }
+  //simple fonction qui envoi requête au serveur (peut traiter les données à recevoir
+  //en fonction du message envoyé par le client, ici, je prends pas le message en compte)
+  function send(){
+    ws.send(JSON.stringify({message: "hello server!"}))
+  }
+
+</script>
   <style>
     /* Remove the navbar's default margin-bottom and rounded borders */ 
     .navbar {
@@ -68,13 +107,14 @@ table.scoreTable2 tr:nth-child(even) {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
       </button>
-      <a class="navbar-brand" href="#">ISIB</a>
+      <a class="navbar-brand">ISIB</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li><a href=javascript:onClickMenu(0)>News</a></li>
         <li><a href=javascript:onClickMenu(1)>Foot</a></li>
         <li><a href=javascript:onClickMenu(2)>Stib</a></li>
+        
       </ul>
     </div>
   </div>
@@ -141,35 +181,54 @@ var content = [
   <h2><b>Arrêt Congrès :</b></h2>\
   <ul style='font-size:30px; line-height:60px'>\
     <li>\
-      <span style='padding:5px; background-color:#ff0000; color:white; border-radius:5px'>92</span> Gare de Schaerbeek : {{.CedData.Scha9201}} min puis {{.CedData.Scha9202}} min\
+      <span style='padding:5px; background-color:#ff0000; color:white; border-radius:5px'>92</span> Gare de Schaerbeek : <span id='s9201'>{{.CedData.Scha9201}} </span> min puis <span id='s9202'>{{.CedData.Scha9202}}</span> min\
     </li>\
     <li>\
-      <span style='padding:5px; background-color:#ff0000; color:white; border-radius:5px'>92</span> Fort-Jaco : {{.CedData.For9201}} min puis {{.CedData.For9202}} min\
+      <span style='padding:5px; background-color:#ff0000; color:white; border-radius:5px'>92</span> Fort-Jaco : <span id='f9201'>{{.CedData.For9201}}</span> min puis <span id='f9202'>{{.CedData.For9202}}</span> min\
     </li>\
     <li>\
-      <span style='padding:5px; background-color:#ff8000; color:white; border-radius:5px'>93</span> Gare de Schaerbeek : {{.CedData.Scha9301}} min puis {{.CedData.Scha9302}} min\
+      <span style='padding:5px; background-color:#ff8000; color:white; border-radius:5px'>93</span> Gare de Schaerbeek : <span id='s9301'>{{.CedData.Scha9301}}</span> min puis <span id='s9302'>{{.CedData.Scha9302}}</span> min\
     </li>\
     <li>\
-      <span style='padding:5px; background-color:#ff8000; color:white; border-radius:5px'>93</span> Fort-Jaco : {{.CedData.For9301}} min puis {{.CedData.For9302}} min\
+      <span style='padding:5px; background-color:#ff8000; color:white; border-radius:5px'>93</span> Fort-Jaco : <span id='f9301'>{{.CedData.For9301}}</span> min puis <span id='f9302'>{{.CedData.For9302}}</span> min\
     </li>\
   </ul>\
 </p>\
 <br>"
 ];
+//état dans la liste des modules
 var msgPtr = 0;
-
+//définit un entier pour skipper le send au chargement, sinon plante
+var loadingSkip = 0;
+//fonction du changement de module
 function change() {
+  
   var newMsg = content[msgPtr];
   document.getElementById('change').innerHTML = newMsg;
   msgPtr++;  msgPtr = (msgPtr % content.length);
+  //envoi une requête au serveur pour recevoir les maj des timers stib
+  if(loadingSkip == 0)
+  {
+    loadingSkip = 1;
+  }
+  else {
+    send();
+  }
 }
-
+//en cliquant sur un élément du menu
 function onClickMenu(index){
+  //change vers l'index indiqué
   msgPtr = index;
   change();
+
 }
 
-function startFunction() { change(); setInterval(change, 20000); }
+//au démarrage, lance le changement toutes les 20 secondes
+function startFunction() { 
+  change();
+  setInterval(change, 20000); 
+
+  }
 
 onload = function() {
 startFunction();

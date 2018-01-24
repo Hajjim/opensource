@@ -90,7 +90,7 @@ func GetVariablesFromServer() {
 			for _, time := range p.PassingTimes {
 				//récupération des minutes avant d'arriver
 				minutsBeforeArrival := dateToMinuts(time.ExpectedArrivalTime)
-				fmt.Println("Congrès direction Schaerbeek ligne " + strconv.Itoa(time.LineId) + " arrive dans " + strconv.Itoa(minutsBeforeArrival) + " minutes")
+				//fmt.Println("Congrès direction Schaerbeek ligne " + strconv.Itoa(time.LineId) + " arrive dans " + strconv.Itoa(minutsBeforeArrival) + " minutes")
 				//envoi de ces minutes dans le slice correspondant à la ligne
 				if time.LineId == 92 {
 					HorraireScha92 = append(HorraireScha92, strconv.Itoa(minutsBeforeArrival))
@@ -103,7 +103,7 @@ func GetVariablesFromServer() {
 		if p.PointId == CongresFor {
 			for _, time := range p.PassingTimes {
 				minutsBeforeArrival := dateToMinuts(time.ExpectedArrivalTime)
-				fmt.Println("Congrès direction Fort-Jaco ligne " + strconv.Itoa(time.LineId) + " arrive dans " + strconv.Itoa(minutsBeforeArrival) + " minutes")
+				//fmt.Println("Congrès direction Fort-Jaco ligne " + strconv.Itoa(time.LineId) + " arrive dans " + strconv.Itoa(minutsBeforeArrival) + " minutes")
 				if time.LineId == 92 {
 					HorraireFor92 = append(HorraireFor92, strconv.Itoa(minutsBeforeArrival))
 				}
