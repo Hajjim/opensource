@@ -1,13 +1,45 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <title>ISIB OpenSource Site</title>
-  <meta http-equiv="refresh" content="60" />
+  
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script>
+  var ws = new WebSocket("ws://" + window.location.host + "/socket");
+  
+  ws.onopen = function() {
+    ws.send(JSON.stringify({message: "hello server!"}))
+  }
+  
+  ws.onmessage = function(event) {
+    var m = JSON.parse(event.data);
+    document.getElementById('s9201').innerHTML = m.Scha9201;
+    document.getElementById('s9202').innerHTML = m.Scha9202;
+    document.getElementById('s9301').innerHTML = m.Scha9301;
+    document.getElementById('s9302').innerHTML = m.Scha9302;
+    document.getElementById('f9201').innerHTML = m.For9201;
+    document.getElementById('f9202').innerHTML = m.For9202;
+    document.getElementById('f9301').innerHTML = m.For9301;
+    document.getElementById('f9302').innerHTML = m.For9302;
+
+    
+  }
+  
+  ws.onerror = function(event) {
+    console.debug(event)
+  }
+  
+  
+  function send(){
+    ws.send(JSON.stringify({message: "hello server!"}))
+  }
+
+</script>
   <style>
       
     .navbar {
@@ -40,21 +72,22 @@
       }
       .row.content {height:auto;} 
     }
-    table.scoreTable,table.scoreTable th,table.scoreTable td {
-    border: 0;
-    border-collapse: collapse;
-    margin: 0 40px;
-    
-}
- table.scoreTable th, table.scoreTable td {
-      
-    padding: 5px;
+    table.scoreTable2 th, table.scoreTable2 td {
+    padding: 1px;
     text-align: center;
-   max-width: 120px;
-    text-overflow: ellipsis; 
-    white-space: nowrap; 
-    overflow: hidden;
+    width: 500px;
 }
+table.scoreTable2 th {
+    background-color: black;
+    color: white;
+}
+table.scoreTable2 tr:nth-child(odd) {
+    background-color: #eee;
+}
+table.scoreTable2 tr:nth-child(even) {
+   background-color:#fff;
+}
+   
   </style>
 </head>
 <body>
@@ -67,13 +100,14 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
       </button>
-      <a class="navbar-brand" href="#">ISIB</a>
+      <a class="navbar-brand">ISIB</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li><a href=javascript:onClickMenu(0)>News</a></li>
         <li><a href=javascript:onClickMenu(1)>Foot</a></li>
         <li><a href=javascript:onClickMenu(2)>Stib</a></li>
+        
       </ul>
     </div>
   </div>
@@ -93,370 +127,468 @@ var content = [
       \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/21\/644x322\/5244765_3_9e02_2018-01-20-e44ddb6-12398-1wz82pu-hewr_9d501827f905cdde46699154afac1a3b.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/24\/644x322\/5246554_3_6936_2018-01-22-51f7a92-949c25e0660742189c2867fa93148_136405df29833cc0aa179ba1ddfe0ff3.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Comment les universités vont trier les lycéens </b> <br>\
-   Les critères ont dû être élaborés par les facs en quelques semaines, alors que les candidats pourront, dès lundi, commencer à inscrire leurs vœux d’orientation sur Parcoursup. \ </td>\
+    <td>\ <hr> <b> Euro de handball en direct : la France qualifiée avant même de jouer la Croatie </b> <br>\
+   Les Bleus se sont qualifiés pour les demi-finales avant même leur match ce soir contre la Croatie. Les Croates, eux, ont toujours besoin d’une victoire. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/21\/644x322\/5244868_3_4abf_au-congres-du-spd-le-21-janvier_5eb883d8e64ad14599b465ea6b0d98b1.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/24\/644x322\/5246545_3_2661_2018-01-23-2390ad4-3008-x5uh73-twxa_48e5527e659c11bab8839cfb4d39792c.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Allemagne : les sociaux-démocrates approuvent le principe d’une coalition avec Merkel </b> <br>\
-   Ce résultat permet un début de sortie de crise en Allemagne, sans gouvernement depuis les élections législatives de septembre dernier. \ </td>\
+    <td>\ <hr> <b> Agressions sexuelles : au moins 40 ans de prison pour Larry Nassar, médecin de la fédération de gym américaine </b> <br>\
+   Plus de 150 jeunes filles ont témoigné contre le docteur, déjà condamné à soixante ans de prison pour détention de matériel pédopornographique. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/21\/644x322\/5244829_3_e0be_l-artillerie-turque-pilonne-les-positions-de_262bc1d4e55337a44bc7ded239c5ad32.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/24\/644x322\/5246536_3_cfb4_richard-corben-est-le-cinquieme-americain-a-re_3cf03d128e3a13ef97ef09a7f0f1fefa.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Syrie : l’armée turque poursuit son offensive dans l’enclave kurde d’Afrin </b> <br>\
-   Cette région située à la frontière entre la Turquie et la Syrie est dominée par la milice kurde du Parti de l’Union démocratique, considéré comme « terroriste » par Ankara. \ </td>\
+    <td>\ <hr> <b> Le maître de l’horreur, Richard Corben, nouveau Grand Prix d’Angoulême </b> <br>\
+   A la veille de l’ouverture de la 45e édition du festival, le dessinateur américain de 77 ans est récompensé pour l’ensemble de son œuvre. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/21\/644x322\/5244773_3_9080_2018-01-21-db6c074-19826-wj5j2i-0polk_fc7ec02c8db4325090cff861c057ebe6.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/24\/644x322\/5246510_3_3c7a_2017-11-13-98e02b7-nic08-global-unemployment-11_b6c5cdd773bb259ef39258021704d80e.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Les hommes féministes sont-ils de meilleurs partenaires sexuels ? </b> <br>\
-   Le mouvement #metoo, loin d’imposer la chasteté générale, favorise la liberté sexuelle, estime Maïa Mazaurette, chroniqueuse de « La Matinale ». \ </td>\
+    <td>\ <hr> <b> Le chômage stagne au mois de décembre </b> <br>\
+   Selon les chiffres de Pôle emploi et de la Dares, le nombre de demandeurs d’emploi de catégorie A a baissé de seulement 0,1 % sur un mois en France métropolitaine. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/21\/644x322\/5244846_3_2003_alain-devaquet-a-l-assemblee-nationale-en-1986_f3bb76b3aaecd7658800e902898a0fcf.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/24\/644x322\/5246569_3_6b95_zhong-zhong-et-hua-hua-a-moins-que-ce-ne-soit_1e15dd3944f1838b198594183ca0995a.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Mort de l’ancien ministre Alain Devaquet, au cœur du mouvement étudiant de 1986 </b> <br>\
-   Son nom restera associé à son projet de réforme de l’université, retiré après trois semaines de manifestations et la mort tragique de l’étudiant Malik Oussekine. \ </td>\
+    <td>\ <hr> <b> Premier clonage de primates selon la technique employée pour Dolly </b> <br>\
+   Une équipe chinoise est parvenue pour la première fois à engendrer deux macaques identiques en utilisant le transfert de noyau mis en œuvre en 1996 pour créer la célèbre brebis. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/21\/644x322\/5244831_3_c1c3_le-styliste-francais-hedi-slimane-en-2012_6168c05a02e73d0821048bbf1b4f5576.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/24\/644x322\/5246444_3_03c2_2017-11-29-3cce4f3-25364-18vyvbn-ob58_3fbac4b99f7807139df884704bcd480a.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> La nomination surprise du Français Hedi Slimane, nouveau directeur artistique de Céline </b> <br>\
-   Le styliste de 49 ans a auparavant été responsable de la création chez Yves Saint Laurent et de la création homme chez Dior. \ </td>\
+    <td>\ <hr> <b> Des propositions-chocs pour réformer le baccalauréat </b> <br>\
+   L’ex-directeur de Sciences Po Lille Pierre Mathiot a remis mercredi au ministre de l’éducation ses idées pour la refonte des programmes et du bac. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/21\/644x322\/5244771_3_3f7e_salle-de-crossfit-a-paris_16131dbf9886d6355123b239a19e6008.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/24\/644x322\/5246109_3_a54d_edouard-philippe-et-la-ministre-des-transports_f405ddd788a89db2759d72d1e9bbee5c.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Le sport extrême, un moyen de se surpasser </b> <br>\
-   Dans les salles d’entraînement, CrossFit, boxe thaïe et autres activités extrêmes sont à la mode, traduisant un besoin de repousser ses limites. \ </td>\
+    <td>\ <hr> <b> Matignon prépare le retard du Grand Paris Express </b> <br>\
+   Le premier ministre veut lancer « une période de consultations et d’échanges » avec les élus. Le décalage du calendrier de mise en service d’une partie des lignes paraît inévitable. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/21\/644x322\/5244796_3_f029_une-colonne-de-fumee-s-eleve-de-l-hotel-interco_1c39a65a546e64b0fc442ba364812942.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/24\/644x322\/5246532_3_7db5_emmanuel-macron-connait-bien-davos-ou-il-e_fc29d12ff8507c1bbbe8536ffff5b167.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Afghanistan : dix-huit personnes sont mortes lors de l’attaque d’un hôtel de luxe à Kaboul </b> <br>\
-   Menée par quatre assaillants pendant douze longues heures, l’attaque a fait dix-huit morts, dont quatorze étrangers. \ </td>\
+    <td>\ <hr> <b> A Davos, Macron fait la promotion d’une France « de retour » </b> <br>\
+   Le président s’est fait d’abord l’avocat du nouvel « esprit de conquête » de l’Hexagone, dont la cote est nettement remontée auprès des investisseurs depuis son élection. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/20\/644x322\/5244643_3_23a7_paul-bocuse-en-2013_bfb2c0df8ba181380c350b121ff41993.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/24\/644x322\/5246556_3_b88b_la-maison-d-arret-de-besancon-en-mars-2010_5b59dfde09347c27174bad7eb11b1886.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Sept choses à savoir sur Paul Bocuse, le pape de la gastronomie lyonnaise et hexagonale </b> <br>\
-   Le « cuisinier du siècle » est devenu une icône internationale en assumant sa mégalomanie, son génie du commerce et de la gourmandise. \ </td>\
+    <td>\ <hr> <b> A la maison d’arrêt de Besançon, la « grève est suivie à 100 % » </b> <br>\
+   Depuis mercredi matin, les CRS cogèrent la détention et ont permis à la chaîne logistique de redémarrer, avec en priorité l’approvisionnement du site en nourriture et l’enlèvement des poubelles. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/21\/644x322\/5244855_3_84a4_2018-01-21-34d3fb8-ai-rugby-union-champions-lei_0dd233b612382a500c607e437bd32a6e.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/23\/644x322\/5246036_3_d330_le-pont-alexandre-iii-le-23-janvier_2c3b1355bff50881e4c93559e3adb40e.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Coupe d’Europe de rugby : le Racing rejoint Toulon et Clermont en quarts </b> <br>\
-   En attendant le match de La Rochelle, trois clubs français se sont qualifiés. \ </td>\
+    <td>\ <hr> <b> Crues et inondations menacent, 23 départements en vigilance orange </b> <br>\
+   Le niveau de certains fleuves comme la Seine continue de monter dangereusement, privant notamment Paris et sa banlieue de RER C, dont la ligne restera fermée jusqu’au 31 janvier. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/21\/644x322\/5244849_3_fb47_2018-01-21-f418cb6-5771179-01-06_d5572125c1adab32de55d44a0a787056.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/24\/644x322\/5246574_3_d95f_former-brazilian-president-luiz-inacio-lula-da_31db0171cfaea081494ebed562f218a8.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Biathlon : Fourcade remporte la mass start, 3 semaines avant les JO </b> <br>\
-   Le Français a devancé le Norvégien Boe lors de la dernière sortie avant les Jeux de Pyeongchang. \ </td>\
+    <td>\ <hr> <b> L’ancien président brésilien Lula reconnu coupable en appel, son avenir politique menacé </b> <br>\
+   Le « père des pauvres » a été reconnu coupable de corruption et de blanchiment par la cour d’appel de Porto Alegre, les deux premiers des trois juges ayant confirmé sa condamnation à de la prison. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/21\/644x322\/5244760_3_c835_donald-trump-dans-les-jardins-de-la-maison_0bfe5475c0c894d5c654be6a328cef6c.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/24\/644x322\/5246564_3_639b_j-espere-continuer-a-creer-jusqu-a-ma-mort_ac76ac5bfcdb25793ff3c7f2b517e0d4.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Président Trump, an II : la fête est gâchée </b> <br>\
-   L’anniversaire de l’arrivée à la Maison Blanche du magnat de l’immobilier a été contrarié par l’échec, vendredi soir au Sénat, d’un vote sur le financement temporaire de l’Etat fédéral. \ </td>\
+    <td>\ <hr> <b> Elton John annonce une tournée d’adieux marathon </b> <br>\
+   La star de 70 ans a expliqué qu’il ne mettrait pas pour autant un terme à sa carrière de musicien et de chanteur et qu’il continuerait à produire de la musique. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/21\/644x322\/5244871_3_f152_romain-hamouma-inquiet_6af77e433f479309feb7aaac25234c71.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/24\/644x322\/5246541_3_c879_adrien-quatennens-a-lille-le-12-septembre_8dd47ad9e943717ebf6c65c5505b3174.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Ligue 1 : Saint-Etienne perd contre Nice et s’enfonce encore </b> <br>\
-   Battus 1-0, les Verts sont juste au-dessus de la zone de relégation alors que les Nicois montent à la 5e place. \ </td>\
+    <td>\ <hr> <b> 35 heures contre CICE : les arguments réducteurs d’Adrien Quatennens </b> <br>\
+   Une affirmation péremptoire du député du Nord fait ressurgir la question du chiffrage de l’efficacité des deux dispositifs en termes de créations d’emploi. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/21\/644x322\/5244860_3_a910_victor-muffat-jeandet-en-action_cf3439c0c567e8c917c4f5a7d02957e5.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/24\/644x322\/5246432_3_958e_au-salon-erotique-eropolis-a-nice-le-9-f_5654d8e4f70a9a177c064c974b593994.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Ski : des Français solides lors du slalom de Kitzbühel </b> <br>\
-   L’épreuve de slalom de Kitzbühel a permis de constater que Marcel Hirscher n’est pas imbattable et que les Français sont en forme, à trois semaines des JO d’hiver. \ </td>\
+    <td>\ <hr> <b> Harcèlements, violences sexistes… quelle responsabilité pour le porno ? </b> <br>\
+   Si les acteurs de l’industrie du X défendent leur métier, ils reconnaissent que l’arrivée de sites de diffusion gratuits ont bouleversé les usages et les comportements. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/21\/644x322\/5244813_3_5788_view-of-nantes-jail-in-carquefou-near-nantes_f6977b427a2b95d53509e08ae611a730.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/24\/644x322\/5246448_3_9eed_a-berwick-upon-tweed-nord-de-l-angleterre-e_1d50ed77a0f897e57b3f8eedad97828f.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Prisons : les syndicats rejettent le projet d’accord, nouveaux débrayages </b> <br>\
-   Après une semaine de tensions, les syndicats de surveillants appellent à un « blocage total » des établissements lundi. \ </td>\
+    <td>\ <hr> <b> Au Royaume-Uni, une « ministre de la solitude » pour lutter contre l’isolement social </b> <br>\
+   Alors que neuf millions de personnes souffrent d’isolement, le gouvernement veut poursuivre le combat engagé par la députée travailliste Jo Cox, assassinée en 2016. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/21\/644x322\/5244734_3_1570_la-ministre-du-travail-muriel-penicaud-veut_131be70e3b48239031a72ec81ece17be.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/24\/644x322\/5246504_3_f2fd_file-in-this-feb-18-2014-file-photo-a_9cd1686b765887c55ffd56369a1ca570.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Muriel Pénicaud veut « prendre le mal à la racine » pour supprimer l’écart de salaire hommes-femmes </b> <br>\
-   La ministre du travail rappelle, dans le « JDD », que les femmes gagnent 9 % de moins que les hommes à poste équivalent et 25 % de moins en moyenne, tous postes confondus. \ </td>\
+    <td>\ <hr> <b> JO d’hiver : de « sérieux indices » de dopage justifient la mise à l’écart des sportifs russes, pour le CIO </b> <br>\
+   Les noms des premiers sportifs russes de premier plan qui ne seront pas autorisés à y participer ont commencé à filtrer. Les instances sportives russes sont furieuses. Le Comité international olympique (CIO) justifie sa décision. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/21\/644x322\/5244841_3_3386_cannabis-tea-packages-are-seen-at-the-1st_3af003f47f7288c7d44f2e7ec32b7d48.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/24\/644x322\/5246484_3_7ba7_simon-baker-nouveau-directeur-de-la-maison_51f0628eae19bcb97aeb90014f5702a1.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Les consommateurs de cannabis bientôt sanctionnés par une amende ? </b> <br>\
-   Un rapport parlementaire, qui doit être présenté mercredi à l’Assemblée nationale, propose de sanctionner les usagers par une amende allant de 150 à 200 euros. \ </td>\
+    <td>\ <hr> <b> Simon Baker nommé directeur de la Maison européenne de la photographie </b> <br>\
+   Le conservateur britannique, venu de la Tate, succède à Jean-Luc Monterosso. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/20\/644x322\/5244403_3_ffe4_le-president-des-etats-unis-donald-trump-le-4_b82050324ca22257066a2da44f954824.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/24\/644x322\/5246527_3_5a00_a-l-ecole-moringa-de-nairobi-les-eleves-appr_f9f394bd76c53acf2e0696a55349cd4a.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Les « fake news » sont-elles de vrais mensonges ? </b> <br>\
-   Trois questions au philosophe Jocelyn Benoist. \ </td>\
+    <td>\ <hr> <b> A l’école des « codeurs » kényans, avant-poste du digital en Afrique </b> <br>\
+   La classe africaine (6). Plusieurs écoles de programmation informatique ont ouvert à Nairobi, où les débouchés pour les élèves développeurs sont importants. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/21\/644x322\/5244805_3_9da4_ils-etaient-500-000-a-marcher-a-los-angeles_865d07862be3c9b167044b14136b1974.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/24\/644x322\/5246350_3_b12a_eu-competition-commissioner-margrethe-vestager_270b4661425d348fab9ef70939c98214.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> La deuxième « Marche des femmes », contre la politique de Trump mobilise aux Etats-Unis </b> <br>\
-   Des défilés étaient organisés dans plus de 250 villes des Etats-Unis et à l’étranger. A Los Angeles, 500 000 personnes ont marché pour marquer leur opposition au président. \ </td>\
+    <td>\ <hr> <b> Bruxelles inflige au groupe américain Qualcomm une amende de près d’un milliard d’euros </b> <br>\
+   L’entreprise est accusée d’avoir versé d’énormes sommes à son client Apple pour qu’il ne s’approvisionne pas auprès de ses rivaux. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/21\/644x322\/5244794_3_c1c7_energy-observer-the-first-self-sustainable_9428d2024c006deab1ae1dffba64758d.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s2.lemde.fr\/image\/2018\/01\/24\/644x322\/5246128_3_655f_le-lycee-international-de-l-est-parisien-l_1d60458328b287c349c299b2dc11f14a.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> La France retire sa candidature à l’Exposition universelle 2025 </b> <br>\
-   Pour justifier son choix, qui suscite nombre de critiques, le premier ministre avance les « faiblesses structurelles » du modèle économique du projet. \ </td>\
+    <td>\ <hr> <b> Brexit : l’Ile-de-France renforce son offre scolaire internationale </b> <br>\
+   Pour séduire les familles qui pourraient quitter la Grande-Bretagne, Matignon et la région Ile-de-France ont notamment confirmé la construction de trois nouveaux lycées internationaux. \ </td>\
    </tr>\
     \
    <tr>\
     <td> <hr> \
-    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/20\/644x322\/5244418_3_c08c_brigitte-bardot-en-2016_84733c116afe60123ab7f9193e7ece7a.jpg' style='width:100%;height:80%;padding-right:20px'>\
+    <img src='http:\/\/s1.lemde.fr\/image\/2018\/01\/24\/644x322\/5246516_3_6e11_vue-du-centre-ville-du-cap_267f82b4f6fc456fb5c674f1d98d8d65.jpg' style='width:100%;height:80%;padding-right:20px'>\
     </td>\
-    <td>\ <hr> <b> Brigitte Bardot : « Sans les animaux, je me serais suicidée » </b> <br>\
-   Pour « La Matinale du Monde », « B.B. » raconte le traumatisme de ses années cinéma, son antipathie pour le genre humain, et le sens de la vie qu’elle a trouvé dans le combat pour la protection des animaux. \ </td>\
+    <td>\ <hr> <b> En Afrique du Sud, vent de panique au Cap menacé d’être privé d’eau </b> <br>\
+   Après trois ans de sécheresse, la deuxième ville d’Afrique du Sud pourrait se retrouver sans eau dans les prochaines semaines. \ </td>\
    </tr>\
     \
    </table>\
 <br>",
-  "<h2> 24 ème journée</h2>\
+"<div>\
+  <h3>Résultats Barclay Premier League</h3>\
+  </div>\
+  <table class='scoreTable2' cellpadding='0' cellspacing='0'>\
+  <thead>\
+  <th  colspan='8'><h4>24 ème journée</h4></th>\
+  <th  colspan='4'></th>\
+  <th><h4>Statut</h4></th>\
+  </thead>\
   \
-  <table class='scoreTable' style='float: left ; border: 1px solid blue;'>\
-  <caption>2018-01-20T12:30:00Z</caption>\
-    <tr>\
-      <th><img src='https:\/\/upload.wikimedia.org\/wikipedia\/en\/f\/fd\/Brighton_\x26_Hove_Albion_logo.svg'  width= 50 height = 50></th>\
-      <th><h2>0</h2></th>\
-      <th><h2>-</h2></th>\
-        <th><h2>4</h2></th>\
-        <th><img src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/5\/5c\/Chelsea_crest.svg'  width= 50 height = 50></th>\
-    </tr>\
-    <tr>\
-      <td>Brighton \x26 Hove Albion</td>\
-      <td colspan =3>FINISHED</td>\
-      <td>Chelsea FC</td>\
-    </tr>\
-  </table>\
-  \
-  <table class='scoreTable' style='float: left ; border: 1px solid blue;'>\
-  <caption>2018-01-20T15:00:00Z</caption>\
-    <tr>\
-      <th><img src='http:\/\/upload.wikimedia.org\/wikipedia\/en\/5\/53\/Arsenal_FC.svg'  width= 50 height = 50></th>\
-      <th><h2>4</h2></th>\
-      <th><h2>-</h2></th>\
-        <th><h2>1</h2></th>\
-        <th><img src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/b\/bf\/Crystal_Palace_F.C._logo_(2013).png'  width= 50 height = 50></th>\
-    </tr>\
-    <tr>\
-      <td>Arsenal FC</td>\
-      <td colspan =3>FINISHED</td>\
-      <td>Crystal Palace FC</td>\
-    </tr>\
-  </table>\
-  \
-  <table class='scoreTable' style='float: left ; border: 1px solid blue;'>\
-  <caption>2018-01-20T15:00:00Z</caption>\
-    <tr>\
-      <th><img src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/a\/a3\/Stoke_City.svg'  width= 50 height = 50></th>\
-      <th><h2>2</h2></th>\
-      <th><h2>-</h2></th>\
-        <th><h2>0</h2></th>\
-        <th><img src='https:\/\/upload.wikimedia.org\/wikipedia\/en\/5\/5a\/Huddersfield_Town_A.F.C._logo.svg'  width= 50 height = 50></th>\
-    </tr>\
-    <tr>\
-      <td>Stoke City FC</td>\
-      <td colspan =3>FINISHED</td>\
-      <td>Huddersfield Town</td>\
-    </tr>\
-  </table>\
-  \
-  <table class='scoreTable' style='float: left ; border: 1px solid blue;'>\
-  <caption>2018-01-20T15:00:00Z</caption>\
-    <tr>\
-      <th><img src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/e\/e0\/West_Ham_United_FC.svg'  width= 50 height = 50></th>\
-      <th><h2>1</h2></th>\
-      <th><h2>-</h2></th>\
-        <th><h2>1</h2></th>\
-        <th><img src='https:\/\/upload.wikimedia.org\/wikipedia\/de\/4\/41\/Afc_bournemouth.svg'  width= 50 height = 50></th>\
-    </tr>\
-    <tr>\
-      <td>West Ham United FC</td>\
-      <td colspan =3>FINISHED</td>\
-      <td>AFC Bournemouth</td>\
-    </tr>\
-  </table>\
-  \
-  <table class='scoreTable' style='float: left ; border: 1px solid blue;'>\
-  <caption>2018-01-20T15:00:00Z</caption>\
-    <tr>\
-      <th><img src='http:\/\/upload.wikimedia.org\/wikipedia\/en\/6\/63\/Leicester02.png'  width= 50 height = 50></th>\
-      <th><h2>2</h2></th>\
-      <th><h2>-</h2></th>\
-        <th><h2>0</h2></th>\
-        <th><img src='https:\/\/upload.wikimedia.org\/wikipedia\/en\/e\/e2\/Watford.svg'  width= 50 height = 50></th>\
-    </tr>\
-    <tr>\
-      <td>Leicester City FC</td>\
-      <td colspan =3>FINISHED</td>\
-      <td>Watford FC</td>\
-    </tr>\
-  </table>\
-  \
-  <table class='scoreTable' style='float: left ; border: 1px solid blue;'>\
-  <caption>2018-01-20T15:00:00Z</caption>\
-    <tr>\
-      <th><img src='https:\/\/upload.wikimedia.org\/wikipedia\/en\/0\/02\/Burnley_FC_badge.png'  width= 50 height = 50></th>\
-      <th><h2>0</h2></th>\
-      <th><h2>-</h2></th>\
-        <th><h2>1</h2></th>\
-        <th><img src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/d\/da\/Manchester_United_FC.svg'  width= 50 height = 50></th>\
-    </tr>\
-    <tr>\
-      <td>Burnley FC</td>\
-      <td colspan =3>FINISHED</td>\
-      <td>Manchester United FC</td>\
-    </tr>\
-  </table>\
-  \
-  <table class='scoreTable' style='float: left ; border: 1px solid blue;'>\
-  <caption>2018-01-20T15:00:00Z</caption>\
-    <tr>\
-      <th><img src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/f\/f9\/Everton_FC.svg'  width= 50 height = 50></th>\
-      <th><h2>1</h2></th>\
-      <th><h2>-</h2></th>\
-        <th><h2>1</h2></th>\
-        <th><img src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/8\/8b\/West_Bromwich_Albion.svg'  width= 50 height = 50></th>\
-    </tr>\
-    <tr>\
-      <td>Everton FC</td>\
-      <td colspan =3>FINISHED</td>\
-      <td>West Bromwich Albion FC</td>\
-    </tr>\
-  </table>\
-  \
-  <table class='scoreTable' style='float: left ; border: 1px solid blue;'>\
-  <caption>2018-01-20T17:30:00Z</caption>\
-    <tr>\
-      <th><img src='https:\/\/upload.wikimedia.org\/wikipedia\/en\/e\/eb\/Manchester_City_FC_badge.svg'  width= 50 height = 50></th>\
-      <th><h2>3</h2></th>\
-      <th><h2>-</h2></th>\
-        <th><h2>1</h2></th>\
-        <th><img src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/5\/56\/Newcastle_United_Logo.svg'  width= 50 height = 50></th>\
-    </tr>\
-    <tr>\
-      <td>Manchester City FC</td>\
-      <td colspan =3>FINISHED</td>\
-      <td>Newcastle United FC</td>\
-    </tr>\
-  </table>\
-  \
-  <table class='scoreTable' style='float: left ; border: 1px solid blue;'>\
-  <caption>2018-01-21T16:00:00Z</caption>\
-    <tr>\
-      <th><img src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/c\/c9\/FC_Southampton.svg'  width= 50 height = 50></th>\
-      <th><h2>1</h2></th>\
-      <th><h2>-</h2></th>\
-        <th><h2>1</h2></th>\
-        <th><img src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/b\/b4\/Tottenham_Hotspur.svg'  width= 50 height = 50></th>\
-    </tr>\
-    <tr>\
-      <td>Southampton FC</td>\
-      <td colspan =3>IN_PLAY</td>\
-      <td>Tottenham Hotspur FC</td>\
-    </tr>\
-  </table>\
-  \
-  <table class='scoreTable' style='float: left ; border: 1px solid blue;'>\
-  <caption>2018-01-22T20:00:00Z</caption>\
-    <tr>\
-      <th><img src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/a\/ab\/Swansea_City_Logo.svg'  width= 50 height = 50></th>\
-      <th><h2>0</h2></th>\
-      <th><h2>-</h2></th>\
-        <th><h2>0</h2></th>\
-        <th><img src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/0\/0a\/FC_Liverpool.svg'  width= 50 height = 50></th>\
-    </tr>\
-    <tr>\
-      <td>Swansea City FC</td>\
-      <td colspan =3>TIMED</td>\
-      <td>Liverpool FC</td>\
-    </tr>\
-  </table>\
-  ",
+  <tr>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+    <div style='color: blue;'>20-01-2018T13:30:00</div>\
+    <div ><br></div>\
+    <div>\
+    <br></div>\
+                    </td>\
+    <td ><h4>Brighton \x26 Hove Albion</h4></td>\
+    <td ><img height='30' src='https:\/\/upload.wikimedia.org\/wikipedia\/en\/f\/fd\/Brighton_\x26_Hove_Albion_logo.svg' width='30' /></td>\
+    <td ><h3>0</h3></td>\
+    <td ><h3>-</h3></td>\
+    <td ><h3>4</h3></td>\
+    <td ><img height='30' src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/5\/5c\/Chelsea_crest.svg' width='30' /></td>\
+    <td ><h4>Chelsea FC</h4></td>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+      FINISHED\
+    </td>\
+     </tr>\
+     \
+  <tr>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+    <div style='color: blue;'>20-01-2018T16:00:00</div>\
+    <div ><br></div>\
+    <div>\
+    <br></div>\
+                    </td>\
+    <td ><h4>Arsenal FC</h4></td>\
+    <td ><img height='30' src='http:\/\/upload.wikimedia.org\/wikipedia\/en\/5\/53\/Arsenal_FC.svg' width='30' /></td>\
+    <td ><h3>4</h3></td>\
+    <td ><h3>-</h3></td>\
+    <td ><h3>1</h3></td>\
+    <td ><img height='30' src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/b\/bf\/Crystal_Palace_F.C._logo_(2013).png' width='30' /></td>\
+    <td ><h4>Crystal Palace FC</h4></td>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+      FINISHED\
+    </td>\
+     </tr>\
+     \
+  <tr>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+    <div style='color: blue;'>20-01-2018T16:00:00</div>\
+    <div ><br></div>\
+    <div>\
+    <br></div>\
+                    </td>\
+    <td ><h4>Stoke City FC</h4></td>\
+    <td ><img height='30' src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/a\/a3\/Stoke_City.svg' width='30' /></td>\
+    <td ><h3>2</h3></td>\
+    <td ><h3>-</h3></td>\
+    <td ><h3>0</h3></td>\
+    <td ><img height='30' src='https:\/\/upload.wikimedia.org\/wikipedia\/en\/5\/5a\/Huddersfield_Town_A.F.C._logo.svg' width='30' /></td>\
+    <td ><h4>Huddersfield Town</h4></td>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+      FINISHED\
+    </td>\
+     </tr>\
+     \
+  <tr>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+    <div style='color: blue;'>20-01-2018T16:00:00</div>\
+    <div ><br></div>\
+    <div>\
+    <br></div>\
+                    </td>\
+    <td ><h4>West Ham United FC</h4></td>\
+    <td ><img height='30' src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/e\/e0\/West_Ham_United_FC.svg' width='30' /></td>\
+    <td ><h3>1</h3></td>\
+    <td ><h3>-</h3></td>\
+    <td ><h3>1</h3></td>\
+    <td ><img height='30' src='https:\/\/upload.wikimedia.org\/wikipedia\/de\/4\/41\/Afc_bournemouth.svg' width='30' /></td>\
+    <td ><h4>AFC Bournemouth</h4></td>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+      FINISHED\
+    </td>\
+     </tr>\
+     \
+  <tr>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+    <div style='color: blue;'>20-01-2018T16:00:00</div>\
+    <div ><br></div>\
+    <div>\
+    <br></div>\
+                    </td>\
+    <td ><h4>Leicester City FC</h4></td>\
+    <td ><img height='30' src='http:\/\/upload.wikimedia.org\/wikipedia\/en\/6\/63\/Leicester02.png' width='30' /></td>\
+    <td ><h3>2</h3></td>\
+    <td ><h3>-</h3></td>\
+    <td ><h3>0</h3></td>\
+    <td ><img height='30' src='https:\/\/upload.wikimedia.org\/wikipedia\/en\/e\/e2\/Watford.svg' width='30' /></td>\
+    <td ><h4>Watford FC</h4></td>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+      FINISHED\
+    </td>\
+     </tr>\
+     \
+  <tr>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+    <div style='color: blue;'>20-01-2018T16:00:00</div>\
+    <div ><br></div>\
+    <div>\
+    <br></div>\
+                    </td>\
+    <td ><h4>Burnley FC</h4></td>\
+    <td ><img height='30' src='https:\/\/upload.wikimedia.org\/wikipedia\/en\/0\/02\/Burnley_FC_badge.png' width='30' /></td>\
+    <td ><h3>0</h3></td>\
+    <td ><h3>-</h3></td>\
+    <td ><h3>1</h3></td>\
+    <td ><img height='30' src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/d\/da\/Manchester_United_FC.svg' width='30' /></td>\
+    <td ><h4>Manchester United FC</h4></td>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+      FINISHED\
+    </td>\
+     </tr>\
+     \
+  <tr>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+    <div style='color: blue;'>20-01-2018T16:00:00</div>\
+    <div ><br></div>\
+    <div>\
+    <br></div>\
+                    </td>\
+    <td ><h4>Everton FC</h4></td>\
+    <td ><img height='30' src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/f\/f9\/Everton_FC.svg' width='30' /></td>\
+    <td ><h3>1</h3></td>\
+    <td ><h3>-</h3></td>\
+    <td ><h3>1</h3></td>\
+    <td ><img height='30' src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/8\/8b\/West_Bromwich_Albion.svg' width='30' /></td>\
+    <td ><h4>West Bromwich Albion FC</h4></td>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+      FINISHED\
+    </td>\
+     </tr>\
+     \
+  <tr>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+    <div style='color: blue;'>20-01-2018T18:30:00</div>\
+    <div ><br></div>\
+    <div>\
+    <br></div>\
+                    </td>\
+    <td ><h4>Manchester City FC</h4></td>\
+    <td ><img height='30' src='https:\/\/upload.wikimedia.org\/wikipedia\/en\/e\/eb\/Manchester_City_FC_badge.svg' width='30' /></td>\
+    <td ><h3>3</h3></td>\
+    <td ><h3>-</h3></td>\
+    <td ><h3>1</h3></td>\
+    <td ><img height='30' src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/5\/56\/Newcastle_United_Logo.svg' width='30' /></td>\
+    <td ><h4>Newcastle United FC</h4></td>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+      FINISHED\
+    </td>\
+     </tr>\
+     \
+  <tr>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+    <div style='color: blue;'>21-01-2018T17:00:00</div>\
+    <div ><br></div>\
+    <div>\
+    <br></div>\
+                    </td>\
+    <td ><h4>Southampton FC</h4></td>\
+    <td ><img height='30' src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/c\/c9\/FC_Southampton.svg' width='30' /></td>\
+    <td ><h3>1</h3></td>\
+    <td ><h3>-</h3></td>\
+    <td ><h3>1</h3></td>\
+    <td ><img height='30' src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/b\/b4\/Tottenham_Hotspur.svg' width='30' /></td>\
+    <td ><h4>Tottenham Hotspur FC</h4></td>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+      FINISHED\
+    </td>\
+     </tr>\
+     \
+  <tr>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+    <div style='color: blue;'>22-01-2018T21:00:00</div>\
+    <div ><br></div>\
+    <div>\
+    <br></div>\
+                    </td>\
+    <td ><h4>Swansea City FC</h4></td>\
+    <td ><img height='30' src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/a\/ab\/Swansea_City_Logo.svg' width='30' /></td>\
+    <td ><h3>1</h3></td>\
+    <td ><h3>-</h3></td>\
+    <td ><h3>0</h3></td>\
+    <td ><img height='30' src='http:\/\/upload.wikimedia.org\/wikipedia\/de\/0\/0a\/FC_Liverpool.svg' width='30' /></td>\
+    <td ><h4>Liverpool FC</h4></td>\
+    <td ><br></td>\
+    <td ><br></td>\
+    <td >\
+      FINISHED\
+    </td>\
+     </tr>\
+     \
+    </table>",
   "<h1>Module de la Stib</h1>\
 <p>\
   <h2><b>Arrêt Congrès :</b></h2>\
   <ul style='font-size:30px; line-height:60px'>\
     <li>\
-      <span style='padding:5px; background-color:#ff0000; color:white; border-radius:5px'>92</span> Gare de Schaerbeek : 14 min puis 28 min\
+      <span style='padding:5px; background-color:#ff0000; color:white; border-radius:5px'>92</span> Gare de Schaerbeek : <span id='s9201'>7 </span> min puis <span id='s9202'>21</span> min\
     </li>\
     <li>\
-      <span style='padding:5px; background-color:#ff0000; color:white; border-radius:5px'>92</span> Fort-Jaco : 9 min puis 15 min\
+      <span style='padding:5px; background-color:#ff0000; color:white; border-radius:5px'>92</span> Fort-Jaco : <span id='f9201'>16</span> min puis <span id='f9202'>30</span> min\
     </li>\
     <li>\
-      <span style='padding:5px; background-color:#ff8000; color:white; border-radius:5px'>93</span> Gare de Schaerbeek : 4 min puis 16 min\
+      <span style='padding:5px; background-color:#ff8000; color:white; border-radius:5px'>93</span> Gare de Schaerbeek : <span id='s9301'>1</span> min puis <span id='s9302'>15</span> min\
     </li>\
     <li>\
-      <span style='padding:5px; background-color:#ff8000; color:white; border-radius:5px'>93</span> Fort-Jaco : 13 min puis 27 min\
+      <span style='padding:5px; background-color:#ff8000; color:white; border-radius:5px'>93</span> Fort-Jaco : <span id='f9301'>10</span> min puis <span id='f9302'>25</span> min\
     </li>\
   </ul>\
 </p>\
 <br>"
 ];
+
 var msgPtr = 0;
 
+var loadingSkip = 0;
+
 function change() {
+  
   var newMsg = content[msgPtr];
   document.getElementById('change').innerHTML = newMsg;
   msgPtr++;  msgPtr = (msgPtr % content.length);
+  
+  if(loadingSkip == 0)
+  {
+    loadingSkip = 1;
+  }
+  else {
+    send();
+  }
 }
 
 function onClickMenu(index){
+  
   msgPtr = index;
   change();
+
 }
 
-function startFunction() { change(); setInterval(change, 20000); }
+
+function startFunction() { 
+  change();
+  setInterval(change, 20000); 
+
+  }
 
 onload = function() {
 startFunction();
