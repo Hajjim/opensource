@@ -1,0 +1,8 @@
+Utilisation de l'API football-data.org
+######################################
+
+Pour récupérer les données sur les matches, j'ai utilisé l'API suivante: https://www.football-data.org
+Afin de pouvoir utiliser cette API, il faut s'inscrire pour recevoir une clé: https://www.football-data.org/client/register
+Une fois la clé obtenu, pour s'authentifier auprès de l'API, il faut mettre un header "X-Auth-Token" dans la requête http suivi de la clé.
+Voici ce que ça donne en golang: 
+req.Header.Set("X-Auth-Token", "286d522f41bf4602b69e9eed00870841")
